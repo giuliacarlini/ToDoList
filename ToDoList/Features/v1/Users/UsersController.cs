@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ToDoList.Controllers
+namespace ToDoList.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/users")]
     [ApiController]
