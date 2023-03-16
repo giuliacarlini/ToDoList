@@ -3,9 +3,9 @@ using System.Text;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using ToDoList.Model;
+using ToDoList.Features.v1.Model;
 
-namespace ToDoList.Features.v1.Authenticate
+namespace ToDoList
 {
     public static class JwtAuth
     {
@@ -21,7 +21,7 @@ namespace ToDoList.Features.v1.Authenticate
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Name.ToString()),
-                    new Claim(ClaimTypes.Role, RoleFactory(user.ID))
+                    new Claim(ClaimTypes.Role, RoleFactory(user.Id))
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(60),
 

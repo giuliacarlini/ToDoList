@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Threading.Tasks;
-
-using ToDoList.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Controllers.v1;
 using ToDoList.Data;
+using ToDoList.Features.v1.Model;
 
-namespace ToDoList.Features.v1.Authenticate
+namespace ToDoList.Features.v1.Controller
 {
+    [Route("api/v{version:apiVersion}/authenticate")]
     [ApiController]
-    public class AuthController : ControllerBase
+    [ApiVersion("1.0")]
+    public class AuthenticateController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public AuthController (DataContext context)
+        public AuthenticateController(DataContext context)
         {
             _context = context;
         }
 
         [HttpPost]
-        [AllowAnonymous]
-        [Route("api/v{version:apiVersion}/authenticate")]
+        [AllowAnonymous] 
         public async Task<IActionResult> Auth([FromBody] User user)
         {
             try

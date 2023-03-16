@@ -1,8 +1,8 @@
-namespace ToDoList.Model
+namespace ToDoList.Features.v1.Model
 {
     public class User
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 
