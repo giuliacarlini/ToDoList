@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ToDoList.Controllers.v2
@@ -9,8 +10,9 @@ namespace ToDoList.Controllers.v2
     public class UsersController : ControllerBase
     {
 
-        [HttpGet] 
+        [HttpGet]        
         [MapToApiVersion("2.0")]
+        [Authorize]
         public DateTime GetV2_0()
         {
             return DateTime.Now.AddDays(5);

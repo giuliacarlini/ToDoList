@@ -1,6 +1,6 @@
-namespace ToDoList
+namespace ToDoList.Model
 {
-    public class Usuario
+    public class User
     {
         public int ID { get; set; }
 
