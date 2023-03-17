@@ -31,9 +31,21 @@ namespace ToDoList.Features.v1.Controller
         [HttpGet("{id}")]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public User Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return _context.Users.Where(x => x.Id == id).First();
+            try
+            {
+                User user = _context.Users.Where(x => x.Id == id).First();
+
+                return Ok(new 
+                    { 
+                        user 
+                    });
+            }
+            catch
+            {
+                return NotFound(new { error = "Erro ao encontrar o usuário." });
+            }
         }
 
         //URI sugerida: /api/v{n}/users
@@ -45,13 +57,24 @@ namespace ToDoList.Features.v1.Controller
 
         [HttpPost]
         [MapToApiVersion("1.0")]
-        //[Authorize]
-        public User Post([FromBody] User user)
+        [Authorize]
+        public async Task<IActionResult> Post([FromBody] User user)
         {
-            _context.Add(user);
-            _context.SaveChanges();
+            try
+            {
+                _context.Add(user);
+                _context.SaveChanges();
 
-            return user;
+                return Ok(new
+                {
+                    user
+                });
+            }
+            catch
+            {
+                return BadRequest(new { error = "Erro ao cadastrar o usuário." });
+            }
+
         }
 
         //URI sugerida: /api/v{n}/users/{ID}
@@ -63,32 +86,29 @@ namespace ToDoList.Features.v1.Controller
 
         [HttpPut("{id}")]
         [MapToApiVersion("1.0")]
-        //[Authorize]
-        public User Put(int id, [FromBody] User user)
+        [Authorize]
+        public async Task<IActionResult> Put(int id, [FromBody] User user)
         {
-            User _user = _context.Users.Where(x => x.Id == id).First();
+            try
+            {
+                User _user = _context.Users.Where(x => x.Id == id).First();
 
-            _user.Name = user.Name;
-            _user.Email = user.Email;
-            _user.Login = user.Login;
-            _user.Password = user.Password;
-            _context.Update(_user);
-            _context.SaveChanges();
-            return _user;
-        }
+                _user.Name = user.Name;
+                _user.Email = user.Email;
+                _user.Login = user.Login;
+                _user.Password = user.Password;
+                _context.Update(_user);
+                _context.SaveChanges();
 
-        [HttpGet]
-        public User GetUsers(string email)
-        {
-            return _context.Users.Where(x => x.Email.ToLower() == email.ToLower())
-                .FirstOrDefault();
-        }
-
-        [HttpGet]
-        public User GetUsersByLogin(string login)
-        {
-            return _context.Users.Where(x => x.Login.ToLower() == login.ToLower())
-                .FirstOrDefault();
+                return Ok(new
+                {
+                    user
+                });
+            }
+            catch
+            {
+                return BadRequest(new { error = "Erro ao alterar o usuário." });
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Data;
+using ToDoList.Features.v1.Model;
 
 namespace ToDoList.Features.v1.Controller
 {
@@ -41,7 +42,8 @@ namespace ToDoList.Features.v1.Controller
             {
                 if (autenticacao.email != null && autenticacao.password != null) 
                 {
-                    var userExists = new UsersController(_context).GetUsers(autenticacao.email);
+                    var userExists = _context.Users.Where(x => x.Email.ToLower() == autenticacao.email.ToLower())
+                            .FirstOrDefault();
 
                     if (userExists == null)
                         return Unauthorized(new { error = "Email e/ou senha está(ão) inválido(s)." });
@@ -56,7 +58,7 @@ namespace ToDoList.Features.v1.Controller
 
                     return Ok(new
                     {
-                        token = token,
+                        token,
                         user = userExists
                     });
                 } 
@@ -94,8 +96,8 @@ namespace ToDoList.Features.v1.Controller
                 string mensagemErro = "";
 
                 if (autenticacaoSSO.app_token != null && autenticacaoSSO.login != null)
-                {
-                    var userExists = new UsersController(_context).GetUsersByLogin(autenticacaoSSO.login);
+                {               
+                    var userExists = _context.Users.Where(x => x.Login.ToLower() == autenticacaoSSO.login.ToLower()).FirstOrDefault();
 
                     if (userExists == null)
                         return Unauthorized(new { error = "Usuário não encontrado." });
