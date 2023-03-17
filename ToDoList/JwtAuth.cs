@@ -4,26 +4,25 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using ToDoList.Features.v1.Model;
+using Microsoft.Extensions.Primitives;
 
 namespace ToDoList
 {
     public static class JwtAuth
     {
-        public static string GenerateToken(User user)
+        public static string GenerateToken(User _user, string _tokenJwt, int _seconds)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            //chave secreta, geralmente se coloca em arquivo de configuração
-            var key = Encoding.ASCII.GetBytes("ZWRpw6fDo28gZW0gY29tcHV0YWRvcmE=");
+            var key = Encoding.ASCII.GetBytes(_tokenJwt);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Name.ToString()),
-                    new Claim(ClaimTypes.Role, RoleFactory(user.Id))
+                    new Claim(ClaimTypes.Name, _user.Name.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(60),
+                Expires = DateTime.UtcNow.AddSeconds(_seconds),
 
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -33,23 +32,43 @@ namespace ToDoList
             return tokenHandler.WriteToken(token);
         }
 
-        private static string RoleFactory(int roleNumber)
+        public static bool ValidateToken(string _tokenJwt, string api_token, out string mensagemErro)
         {
-            switch (roleNumber)
+            mensagemErro = "";
+
+            if (_tokenJwt == null)
+                return false;
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_tokenJwt);
+            try
             {
-                case 1:
-                    return "Director";
+                tokenHandler.ValidateToken(api_token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
 
-                case 2:
-                    return "Manager";
+                var jwtToken = (JwtSecurityToken)validatedToken;
 
-                case 3:
-                    return "Colaborator";
-
-
-                default:
-                    throw new Exception();
+                return true;
+            }
+            catch (Exception e)
+            {
+                mensagemErro = e.Message;
+                return false;
             }
         }
+    }
+
+    public class TokenConfigurations
+    {
+        public string? Audience { get; set; }
+        public string? Issuer { get; set; }
+        public int Seconds { get; set; }
+        public string? SecretJwtKey { get; set; }
     }
 }

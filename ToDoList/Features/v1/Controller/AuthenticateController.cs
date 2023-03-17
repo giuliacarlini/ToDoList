@@ -1,9 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Data;
-using ToDoList.Features.v1.Model;
 
 namespace ToDoList.Features.v1.Controller
 {
@@ -14,40 +11,122 @@ namespace ToDoList.Features.v1.Controller
     {
         private readonly DataContext _context;
 
-        public AuthenticateController(DataContext context)
+        private readonly IConfiguration _configuration;
+
+        public AuthenticateController(DataContext context, IConfiguration configuration)
         {
             _context = context;
+
+            _configuration = configuration;
         }
+
+        public class Autenticacao
+        {
+            public string? email { get; set; }
+            public string? password { get; set; }
+        }
+
+        //URI sugerida: /api/v{n}/authenticate
+        //Public: SIM
+        //Tipo: POST
+        //Request: { "login": STRING; "password": STRING }
+        //Return Success: { "token": JWT, "user": OBJECT }
+        //Return Fail: { "error" : STRING }
 
         [HttpPost]
         [AllowAnonymous] 
-        public async Task<IActionResult> Auth([FromBody] User user)
+        public async Task<IActionResult> Auth([FromBody] Autenticacao autenticacao)
         {
             try
             {
-                var userExists = new UsersController(_context).GetUsers(user.Email);
-
-                if (userExists == null)
-                    return BadRequest(new { Message = "Email e/ou senha está(ão) inválido(s)." });
-
-
-                if (userExists.Password != user.Password)
-                    return BadRequest(new { Message = "Email e/ou senha está(ão) inválido(s)." });
-
-
-                var token = JwtAuth.GenerateToken(userExists);
-
-                return Ok(new
+                if (autenticacao.email != null && autenticacao.password != null) 
                 {
-                    Token = token,
-                    Usuario = userExists
-                });
+                    var userExists = new UsersController(_context).GetUsers(autenticacao.email);
+
+                    if (userExists == null)
+                        return Unauthorized(new { error = "Email e/ou senha está(ão) inválido(s)." });
+
+                    if (userExists.Password != autenticacao.password)
+                        return Unauthorized(new { error = "Email e/ou senha está(ão) inválido(s)." });
+
+                    var _SecretJwtKey = _configuration.GetValue<string>("TokenConfigurations:SecretJwtKey");
+                    var _Seconds = _configuration.GetValue<int>("TokenConfigurations:Seconds");
+
+                    var token = JwtAuth.GenerateToken(userExists, _SecretJwtKey, _Seconds);
+
+                    return Ok(new
+                    {
+                        token = token,
+                        user = userExists
+                    });
+                } 
+                else
+                {
+                    return Unauthorized(new { error = "Email e/ou senha está(ão) inválido(s)." });
+                }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return BadRequest(new { Message = "Ocorreu algum erro interno na aplicação, por favor tente novamente." });
+                return BadRequest(new { error = "Ocorreu algum erro interno na aplicação, por favor tente novamente." });
             }
+        }
+
+        public class AutenticacaoSSO
+        {
+            public string? login { get; set; }
+            public string? app_token { get; set; }            
+        }
+
+        //URI sugerida: /api/v{n}/authenticate/sso
+        //Public: SIM
+        //Tipo: POST
+        //Request: { "login": STRING; "app_token": STRING }
+        //Return Success: { "token": JWT, "user": OBJECT }
+        //Return Fail: { "error" : STRING }
+
+        [HttpPost("sso")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AuthSSO([FromBody] AutenticacaoSSO autenticacaoSSO)
+        {
+            try
+            {
+                string mensagemErro = "";
+
+                if (autenticacaoSSO.app_token != null && autenticacaoSSO.login != null)
+                {
+                    var userExists = new UsersController(_context).GetUsersByLogin(autenticacaoSSO.login);
+
+                    if (userExists == null)
+                        return Unauthorized(new { error = "Usuário não encontrado." });
+
+                    var _SecretJwtKey = _configuration.GetValue<string>("TokenConfigurations:SecretJwtKey");
+
+                    bool validado = JwtAuth.ValidateToken(
+                        _SecretJwtKey, autenticacaoSSO.app_token, out mensagemErro);
+
+                    if (validado)
+                    {
+                        return Ok(new
+                        {
+                            token = autenticacaoSSO.app_token,
+                            user = userExists
+                        });
+                    }
+                    else
+                    {
+                        return Unauthorized(new { error = mensagemErro });
+                    }
+                } else
+                {
+                    return Unauthorized(new { error = "Login e/ou token está(ão) inválido(s)." });
+                }
+            }
+            catch
+            {
+                return BadRequest(new { error = "Ocorreu algum erro interno na aplicação, por favor tente novamente." });
+            }
+        
         }
     }
 }

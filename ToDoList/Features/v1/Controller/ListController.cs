@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
+using System;
 using ToDoList.Data;
 using ToDoList.Features.v1.Model;
 
@@ -15,6 +17,12 @@ namespace ToDoList.Features.v1.Controller
             _context = context;
         }
 
+        //URI sugerida: /api/v{n}/lists/{ID}
+        //Public: Sim
+        //Tipo: GET
+        //Return Success: { "list" : OBJECT,  “user_id”: INTEGER }
+        //Return Fail: { "message" : STRING }
+
         [HttpGet("{id}")]
         [MapToApiVersion("1.0")]
         //[Authorize]
@@ -23,6 +31,13 @@ namespace ToDoList.Features.v1.Controller
             List _list = _context.List.Where(x => x.ID == id).First(); ;
             return _list;
         }
+
+        //URI sugerida: /api/v{n}/lists
+        //Public: Sim
+        //Tipo: POST
+        //Request: { "title": STRING }
+        //Return Success: { "list" : { "title" : STRING } }
+        //Return Fail: { "message" : STRING }
 
         [HttpPost]
         [MapToApiVersion("1.0")]
@@ -34,6 +49,12 @@ namespace ToDoList.Features.v1.Controller
 
             return list;
         }
+
+        //URI sugerida: /api/v{n}/lists/{ID}
+        //Public: Não
+        //Tipo: DELETE
+        //Request: { "id": INTEGER }
+        //Return Fail: { "message" : STRING }
 
         [HttpDelete("{id}")]
         [MapToApiVersion("1.0")]
