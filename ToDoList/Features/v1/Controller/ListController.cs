@@ -25,11 +25,21 @@ namespace ToDoList.Features.v1.Controller
 
         [HttpGet("{id}")]
         [MapToApiVersion("1.0")]
-        //[Authorize]
-        public List GetByID(int id)
+        public async Task<IActionResult> GetByID(int id)
         {
-            List _list = _context.List.Where(x => x.ID == id).First(); ;
-            return _list;
+            try
+            { 
+                List list = _context.List.Where(x => x.ID == id).First();
+
+                return Ok(new
+                {
+                    list
+                });
+            }
+            catch
+            {
+                return NotFound( new { message = "Lista não encontrada" });
+            }
         }
 
         //URI sugerida: /api/v{n}/lists
@@ -41,13 +51,22 @@ namespace ToDoList.Features.v1.Controller
 
         [HttpPost]
         [MapToApiVersion("1.0")]
-        //[Authorize]
-        public List Post([FromBody] List list)
+        public async Task<IActionResult> Post([FromBody] List list)
         {
-            _context.Add(list);
-            _context.SaveChanges();
+            try
+            {
+                _context.Add(list);
+                _context.SaveChanges();
 
-            return list;
+                return Ok(new
+                {
+                    list = new { title = list.Title }
+                });
+            }
+            catch
+            {
+                return BadRequest(new { message = "Lista não cadastrada." });
+            }
         }
 
         //URI sugerida: /api/v{n}/lists/{ID}
@@ -58,13 +77,21 @@ namespace ToDoList.Features.v1.Controller
 
         [HttpDelete("{id}")]
         [MapToApiVersion("1.0")]
-        //[Authorize]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            List _list = _context.List.Where(x => x.ID == id).First(); 
+            try
+            {
+                List _list = _context.List.Where(x => x.ID == id).First();
 
-            _context.Remove(_list);
-            _context.SaveChanges();
+                _context.Remove(_list);
+                _context.SaveChanges();
+
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest(new { message = "Lista não cadastrada." });
+            }
         }
     }
 }
