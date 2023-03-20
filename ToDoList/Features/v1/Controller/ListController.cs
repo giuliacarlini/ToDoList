@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using System;
 using ToDoList.Data;
 using ToDoList.Features.v1.Model;
 
@@ -28,7 +26,7 @@ namespace ToDoList.Features.v1.Controller
         public async Task<IActionResult> GetByID(int id)
         {
             try
-            { 
+            {
                 List list = _context.List.Where(x => x.ID == id).First();
 
                 return Ok(new
@@ -38,7 +36,7 @@ namespace ToDoList.Features.v1.Controller
             }
             catch
             {
-                return NotFound( new { message = "Lista não encontrada" });
+                return NotFound(new { message = "Lista não encontrada" });
             }
         }
 

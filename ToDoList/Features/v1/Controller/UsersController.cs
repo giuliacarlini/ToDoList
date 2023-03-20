@@ -1,9 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using Microsoft.VisualBasic;
-using System;
-using System.Xml.Linq;
 using ToDoList.Data;
 using ToDoList.Features.v1.Model;
 
@@ -37,10 +33,10 @@ namespace ToDoList.Features.v1.Controller
             {
                 User user = _context.Users.Where(x => x.Id == id).First();
 
-                return Ok(new 
-                    { 
-                        user 
-                    });
+                return Ok(new
+                {
+                    user
+                });
             }
             catch
             {

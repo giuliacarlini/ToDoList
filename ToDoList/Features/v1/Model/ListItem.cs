@@ -1,10 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection;
-using System.Text.Json.Serialization;
-
-namespace ToDoList.Features.v1.Model
+﻿namespace ToDoList.Features.v1.Model
 {
     public class ListItem
     {

@@ -1,0 +1,10 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = true
+	symlinks = false
+	ignorecase = true
+[remote "origin"]
+	url = https://git.vibbra.com.br/giulia-1678825113/todolist.git
+	fetch = +refs/*:refs/*
+	mirror = true

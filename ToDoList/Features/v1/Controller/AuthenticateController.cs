@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Data;
-using ToDoList.Features.v1.Model;
 
 namespace ToDoList.Features.v1.Controller
 {
@@ -35,12 +34,12 @@ namespace ToDoList.Features.v1.Controller
         //Return Fail: { "error" : STRING }
 
         [HttpPost]
-        [AllowAnonymous] 
+        [AllowAnonymous]
         public async Task<IActionResult> Auth([FromBody] Autenticacao autenticacao)
         {
             try
             {
-                if (autenticacao.email != null && autenticacao.password != null) 
+                if (autenticacao.email != null && autenticacao.password != null)
                 {
                     var userExists = _context.Users.Where(x => x.Email.ToLower() == autenticacao.email.ToLower())
                             .FirstOrDefault();
@@ -61,7 +60,7 @@ namespace ToDoList.Features.v1.Controller
                         token,
                         user = userExists
                     });
-                } 
+                }
                 else
                 {
                     return Unauthorized(new { error = "Email e/ou senha está(ão) inválido(s)." });
@@ -77,7 +76,7 @@ namespace ToDoList.Features.v1.Controller
         public class AutenticacaoSSO
         {
             public string? login { get; set; }
-            public string? app_token { get; set; }            
+            public string? app_token { get; set; }
         }
 
         //URI sugerida: /api/v{n}/authenticate/sso
@@ -96,7 +95,7 @@ namespace ToDoList.Features.v1.Controller
                 string mensagemErro = "";
 
                 if (autenticacaoSSO.app_token != null && autenticacaoSSO.login != null)
-                {               
+                {
                     var userExists = _context.Users.Where(x => x.Login.ToLower() == autenticacaoSSO.login.ToLower()).FirstOrDefault();
 
                     if (userExists == null)
@@ -119,7 +118,8 @@ namespace ToDoList.Features.v1.Controller
                     {
                         return Unauthorized(new { error = mensagemErro });
                     }
-                } else
+                }
+                else
                 {
                     return Unauthorized(new { error = "Login e/ou token está(ão) inválido(s)." });
                 }
@@ -128,7 +128,7 @@ namespace ToDoList.Features.v1.Controller
             {
                 return BadRequest(new { error = "Ocorreu algum erro interno na aplicação, por favor tente novamente." });
             }
-        
+
         }
     }
 }

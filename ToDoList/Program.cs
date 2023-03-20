@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using System.Text;
 using ToDoList;
 using ToDoList.Data;
@@ -24,12 +22,13 @@ builder.Services.AddDbContext<DataContext>(
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {
+builder.Services.AddSwaggerGen(c =>
+{
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ToDoList", Version = "v1" });
 
-    c.AddSecurityDefinition(name : "Bearer", securityScheme: new OpenApiSecurityScheme
+    c.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
     {
         Description =
             "JWT Authorization Header - utilizado com Bearer Authentication.\r\n\r\n" +
@@ -80,7 +79,7 @@ builder.Services.AddAuthentication(x =>
 })
     .AddJwtBearer(x =>
     {
-        
+
         x.RequireHttpsMetadata = false;
         x.SaveToken = true;
         x.TokenValidationParameters = new TokenValidationParameters

@@ -30,11 +30,11 @@ namespace ToDoList.Features.v1.Controller
         {
             try
             {
-                IEnumerable<ListItem> _listItems = _context.ListItem.Where(x => x.List_id == id && x.ListItem_id <= 0) ;
+                IEnumerable<ListItem> _listItems = _context.ListItem.Where(x => x.List_id == id && x.ListItem_id <= 0);
 
                 _listItems = RetornaItens(_listItems);
 
-                return Ok( new { items = _listItems } ); 
+                return Ok(new { items = _listItems });
             }
             catch
             {
@@ -48,8 +48,8 @@ namespace ToDoList.Features.v1.Controller
             {
                 _listItem.ListItems = _context.ListItem.Where(x => x.ListItem_id == _listItem.Id);
 
-                if (_listItem.ListItems != null)                    
-                   RetornaItens(_listItem.ListItems);
+                if (_listItem.ListItems != null)
+                    RetornaItens(_listItem.ListItems);
             }
 
             return listItems;
@@ -79,11 +79,11 @@ namespace ToDoList.Features.v1.Controller
                 _context.Add(listItem);
                 _context.SaveChanges();
 
-                return Ok ( new { item = listItem } );
+                return Ok(new { item = listItem });
             }
             catch (Exception e)
             {
-                return BadRequest( new { message = "Erro ao gravar item!" });
+                return BadRequest(new { message = "Erro ao gravar item!" });
             }
         }
 
