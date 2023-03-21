@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToDoList.Data;
-using ToDoList.Features.v1.Model;
+using ToDoList.Features.v1.Database.DTOs;
+using ToDoList.Features.v1.Database.EntityFramework.Data;
+using ToDoList.Features.v1.Models;
+using ToDoList.Features.v1.Services;
 
-namespace ToDoList.Features.v1.Controller
+namespace ToDoList.Features.v1.Controllers
 {
     [Route("api/v{version:apiVersion}/lists")]
     [ApiController]
     [ApiVersion("1.0")]
     public class ListController : ControllerBase
     {
-        private readonly DataContext _context;
-        public ListController(DataContext context)
+        private readonly IListService _services;
+        public ListController(IListService service)
         {
-            _context = context;
+            _services = service;
         }
 
         //URI sugerida: /api/v{n}/lists/{ID}
@@ -27,11 +29,11 @@ namespace ToDoList.Features.v1.Controller
         {
             try
             {
-                List list = _context.List.Where(x => x.ID == id).First();
+                ListDTO listDTO = _services.GetByID(id);
 
                 return Ok(new
                 {
-                    list
+                    list = listDTO
                 });
             }
             catch
@@ -49,12 +51,11 @@ namespace ToDoList.Features.v1.Controller
 
         [HttpPost]
         [MapToApiVersion("1.0")]
-        public async Task<IActionResult> Post([FromBody] List list)
+        public async Task<IActionResult> Post([FromBody] ListDTO list)
         {
             try
             {
-                _context.Add(list);
-                _context.SaveChanges();
+                list = _services.Add(list);
 
                 return Ok(new
                 {
@@ -79,10 +80,7 @@ namespace ToDoList.Features.v1.Controller
         {
             try
             {
-                List _list = _context.List.Where(x => x.ID == id).First();
-
-                _context.Remove(_list);
-                _context.SaveChanges();
+                _services.Delete(id);
 
                 return Ok();
             }

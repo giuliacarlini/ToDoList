@@ -2,13 +2,13 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using ToDoList.Features.v1.Model;
+using ToDoList.Features.v1.Database.DTOs;
 
 namespace ToDoList
 {
     public static class JwtAuth
     {
-        public static string GenerateToken(User _user, string _tokenJwt, int _seconds)
+        public static string GenerateToken(UserDTO _user, string _tokenJwt, int _seconds)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 

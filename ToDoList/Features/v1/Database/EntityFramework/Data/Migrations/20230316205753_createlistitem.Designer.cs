@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ToDoList.Data;
+using ToDoList.Features.v1.Database.EntityFramework.Data;
 
 #nullable disable
 
-namespace ToDoList.data.migrations
+namespace ToDoList.Data.migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230318002301_itemlist")]
-    partial class itemlist
+    [Migration("20230316205753_createlistitem")]
+    partial class createlistitem
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,9 +46,6 @@ namespace ToDoList.data.migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("ListItem_id")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("List_id")
                         .HasColumnType("INTEGER");

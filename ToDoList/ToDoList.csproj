@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Features\v1\Controller\Utils.cs" />
+    <Compile Remove="Features\v1\Controllers\Utils.cs" />
   </ItemGroup>
 
   <ItemGroup>

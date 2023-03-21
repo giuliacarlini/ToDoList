@@ -1,21 +1,24 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Data;
-using ToDoList.Features.v1.Model;
+using ToDoList.Features.v1.Database.DTOs;
+using ToDoList.Features.v1.Database.EntityFramework.Data;
+using ToDoList.Features.v1.Models;
+using ToDoList.Features.v1.Services;
 
-namespace ToDoList.Features.v1.Controller
+namespace ToDoList.Features.v1.Controllers
 {
     [Route("api/v{version:apiVersion}/users")]
     [ApiController]
     [ApiVersion("1.0")]
 
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly DataContext _context;
 
-        public UsersController(DataContext context)
+        private readonly IUserService _service;
+
+        public UserController(IUserService service)
         {
-            _context = context;
+            _service = service;
         }
 
         //URI sugerida: /api/v{n}/users/{ID}
@@ -27,15 +30,15 @@ namespace ToDoList.Features.v1.Controller
         [HttpGet("{id}")]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public async Task<IActionResult> Get(int id)
+        public ActionResult Get(int id)
         {
             try
             {
-                User user = _context.Users.Where(x => x.Id == id).First();
+                UserDTO userDTO = _service.SearchById(id);
 
                 return Ok(new
                 {
-                    user
+                    userDTO
                 });
             }
             catch
@@ -54,16 +57,15 @@ namespace ToDoList.Features.v1.Controller
         [HttpPost]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public async Task<IActionResult> Post([FromBody] User user)
+        public ActionResult Post([FromBody] UserDTO UserDTO)
         {
             try
             {
-                _context.Add(user);
-                _context.SaveChanges();
+                UserDTO userDTO = _service.Add(UserDTO);
 
                 return Ok(new
                 {
-                    user
+                    userDTO
                 });
             }
             catch
@@ -83,22 +85,17 @@ namespace ToDoList.Features.v1.Controller
         [HttpPut("{id}")]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public async Task<IActionResult> Put(int id, [FromBody] User user)
+        public ActionResult Put(int id, [FromBody] UserDTO userDTO)
         {
             try
             {
-                User _user = _context.Users.Where(x => x.Id == id).First();
+                _service.Update(id, userDTO);
 
-                _user.Name = user.Name;
-                _user.Email = user.Email;
-                _user.Login = user.Login;
-                _user.Password = user.Password;
-                _context.Update(_user);
-                _context.SaveChanges();
+                userDTO.Id = id;
 
                 return Ok(new
                 {
-                    user
+                   user = userDTO
                 });
             }
             catch

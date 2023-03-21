@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ToDoList.Data;
+using ToDoList.Features.v1.Database.EntityFramework.Data;
 
 #nullable disable
 
 namespace ToDoList.Data.migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230316205753_createlistitem")]
-    partial class createlistitem
+    [Migration("20230316201810_createlist")]
+    partial class createlist
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,7 +19,7 @@ namespace ToDoList.Data.migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
 
-            modelBuilder.Entity("ToDoList.Features.v1.Model.List", b =>
+            modelBuilder.Entity("ToDoList.Model.List", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -29,7 +29,7 @@ namespace ToDoList.Data.migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("User_id")
+                    b.Property<int>("User_ID")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
@@ -37,34 +37,9 @@ namespace ToDoList.Data.migrations
                     b.ToTable("List");
                 });
 
-            modelBuilder.Entity("ToDoList.Features.v1.Model.ListItem", b =>
+            modelBuilder.Entity("ToDoList.Model.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("List_id")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("User_id")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ListItem");
-                });
-
-            modelBuilder.Entity("ToDoList.Features.v1.Model.User", b =>
-                {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -84,7 +59,7 @@ namespace ToDoList.Data.migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.ToTable("Users");
                 });

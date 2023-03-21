@@ -8,7 +8,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using ToDoList;
-using ToDoList.Data;
+using ToDoList.Features.v1.Database;
+using ToDoList.Features.v1.Database.EntityFramework.Data;
+using ToDoList.Features.v1.Services;
+using ToDoList.Features.v1.Services.Lists;
+using ToDoList.Features.v1.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +23,14 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(
     context => context.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IListRepository, ListRepository>();
+builder.Services.AddScoped<IListService, ListService>();
+
+builder.Services.AddScoped<IListItemRepository, ListItemRepository>();
+builder.Services.AddScoped<IListItemService, ListItemService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

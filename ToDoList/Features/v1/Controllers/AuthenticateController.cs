@@ -1,30 +1,28 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Data;
+using ToDoList.Features.v1.Database.EntityFramework.Data;
+using ToDoList.Features.v1.Models;
+using ToDoList.Features.v1.Services;
 
-namespace ToDoList.Features.v1.Controller
+namespace ToDoList.Features.v1.Controllers
 {
     [Route("api/v{version:apiVersion}/authenticate")]
     [ApiController]
     [ApiVersion("1.0")]
     public class AuthenticateController : ControllerBase
     {
-        private readonly DataContext _context;
-
         private readonly IConfiguration _configuration;
 
-        public AuthenticateController(DataContext context, IConfiguration configuration)
+        private readonly IUserService _userService;
+
+        public AuthenticateController(IConfiguration configuration, IUserService service)
         {
-            _context = context;
 
             _configuration = configuration;
+
+            _userService = service;
         }
 
-        public class Autenticacao
-        {
-            public string? email { get; set; }
-            public string? password { get; set; }
-        }
 
         //URI sugerida: /api/v{n}/authenticate
         //Public: SIM
@@ -35,14 +33,13 @@ namespace ToDoList.Features.v1.Controller
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Auth([FromBody] Autenticacao autenticacao)
+        public async Task<IActionResult> Auth([FromBody] Authenticate autenticacao)
         {
             try
             {
                 if (autenticacao.email != null && autenticacao.password != null)
                 {
-                    var userExists = _context.Users.Where(x => x.Email.ToLower() == autenticacao.email.ToLower())
-                            .FirstOrDefault();
+                    var userExists = _userService.GetByEmail(autenticacao.email);
 
                     if (userExists == null)
                         return Unauthorized(new { error = "Email e/ou senha está(ão) inválido(s)." });
@@ -67,17 +64,13 @@ namespace ToDoList.Features.v1.Controller
                 }
 
             }
-            catch (Exception)
+            catch 
             {
                 return BadRequest(new { error = "Ocorreu algum erro interno na aplicação, por favor tente novamente." });
             }
         }
 
-        public class AutenticacaoSSO
-        {
-            public string? login { get; set; }
-            public string? app_token { get; set; }
-        }
+
 
         //URI sugerida: /api/v{n}/authenticate/sso
         //Public: SIM
@@ -88,7 +81,7 @@ namespace ToDoList.Features.v1.Controller
 
         [HttpPost("sso")]
         [AllowAnonymous]
-        public async Task<IActionResult> AuthSSO([FromBody] AutenticacaoSSO autenticacaoSSO)
+        public async Task<IActionResult> AuthSSO([FromBody] AuthenticateSSO autenticacaoSSO)
         {
             try
             {
@@ -96,7 +89,7 @@ namespace ToDoList.Features.v1.Controller
 
                 if (autenticacaoSSO.app_token != null && autenticacaoSSO.login != null)
                 {
-                    var userExists = _context.Users.Where(x => x.Login.ToLower() == autenticacaoSSO.login.ToLower()).FirstOrDefault();
+                    var userExists = _userService.GetByLogin(autenticacaoSSO.login);
 
                     if (userExists == null)
                         return Unauthorized(new { error = "Usuário não encontrado." });

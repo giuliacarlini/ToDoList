@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ToDoList.Features.v1.Model;
+using ToDoList.Features.v1.Models;
 
-namespace ToDoList.Data
+namespace ToDoList.Features.v1.Database.EntityFramework.Data
 {
     public class DataContext : DbContext
     {

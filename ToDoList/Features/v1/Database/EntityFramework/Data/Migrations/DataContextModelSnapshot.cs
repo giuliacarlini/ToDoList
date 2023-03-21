@@ -2,20 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ToDoList.Data;
+using ToDoList.Features.v1.Database.EntityFramework.Data;
 
 #nullable disable
 
-namespace ToDoList.data.Migrations
+namespace ToDoList.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230319133112_listem")]
-    partial class listem
+    partial class DataContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
