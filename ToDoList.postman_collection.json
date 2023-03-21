@@ -18,7 +18,8 @@
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);\r",
 									"postman.setEnvironmentVariable(\"token\", jsonData.token);\r",
-									"postman.setEnvironmentVariable(\"user\", jsonData.user.id);"
+									"postman.setEnvironmentVariable(\"user_id\", jsonData.user.id);\r",
+									"postman.setEnvironmentVariable(\"login\", jsonData.user.login);"
 								],
 								"type": "text/javascript"
 							}
@@ -29,7 +30,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"giulia@gmail.com\",\r\n  \"password\": \"123\"\r\n}",
+							"raw": "{\r\n  \"email\": \"adm@adm.com\",\r\n  \"password\": \"123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -55,7 +56,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"login\": \"giulia\",\r\n  \"app_token\": \"{{token}}\"\r\n}",
+							"raw": "{\r\n  \"login\": \"{{login}}\",\r\n  \"app_token\": \"{{token}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -141,13 +142,13 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{host}}/users/1",
+							"raw": "{{host}}/users/2",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"users",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -160,7 +161,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"teste\",\r\n  \"email\": \"teste@gmail.com\",\r\n  \"login\": \"giulia\",\r\n  \"password\": \"123\"\r\n}",
+							"raw": "{\r\n  \"name\": \"anderson\",\r\n  \"email\": \"anderson@gmail.com\",\r\n  \"login\": \"anderson\",\r\n  \"password\": \"123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -188,8 +189,27 @@
 				{
 					"name": "Post List",
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 0,\r\n  \"title\": \"Lista 1\",\r\n  \"user_id\": {{user}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/lists/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"lists",
+								""
+							]
+						}
 					},
 					"response": []
 				},
@@ -197,15 +217,35 @@
 					"name": "Get List",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{host}}/lists/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"lists",
+								"2"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Delete List",
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/lists/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"lists",
+								"1"
+							]
+						}
 					},
 					"response": []
 				}
@@ -216,17 +256,71 @@
 			"item": [
 				{
 					"name": "Get Items",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/list/2/items",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"list",
+								"2",
+								"items"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Post Item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 0,\r\n  \"title\": \"Teste 1\",\r\n  \"description\": \"Teste 1\",\r\n  \"user_id\": 2,\r\n  \"list_id\": 2,\r\n  \"listItem_id\": 7\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/list/1/items",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"list",
+								"1",
+								"items"
+							]
+						}
 					},
 					"response": []
 				},

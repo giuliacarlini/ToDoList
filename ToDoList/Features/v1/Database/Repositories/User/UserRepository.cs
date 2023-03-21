@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
 using ToDoList.Features.v1.Database.EntityFramework.Data;
 using ToDoList.Features.v1.Models;
-using static ToDoList.Features.v1.Controllers.AuthenticateController;
 
 namespace ToDoList.Features.v1.Database
 {

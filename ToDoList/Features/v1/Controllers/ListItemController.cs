@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Features.v1.Database.DTOs;
-using ToDoList.Features.v1.Database.EntityFramework.Data;
-using ToDoList.Features.v1.Models;
 using ToDoList.Features.v1.Services;
-using ToDoList.Features.v1.Services.Users;
+
 
 namespace ToDoList.Features.v1.Controllers
 {
@@ -26,12 +24,6 @@ namespace ToDoList.Features.v1.Controllers
             _serviceUser = serviceUser;
         }
 
-        //URI sugerida: /api/v{n}/lists/{ID}/items
-        //Public: Não
-        //Tipo: GET
-        //Return Success: { "items" : { OBJECT1, OBJECT2 } }
-        //Return Fail: { "message" : STRING }
-
         [HttpGet]
         [MapToApiVersion("1.0")]
         [Authorize]
@@ -48,14 +40,6 @@ namespace ToDoList.Features.v1.Controllers
                 return BadRequest(new { message = "" });
             }
         }
-
-
-        //URI sugerida: / api / v{ n}/ lists /{ ID}/ items
-        //Public: Não
-        //Tipo: POST
-        //Request: { "title": STRING, "description": STRING, “user_id”: INTEGER }
-        //Return Success: { "item" : OBJECT }
-        //Return Fail: { "message" : STRING }
 
         [HttpPost]
         [MapToApiVersion("1.0")]
@@ -85,37 +69,39 @@ namespace ToDoList.Features.v1.Controllers
             }
         }
 
-        //URI sugerida: /api/v{n}/lists/{ID}/items/{ID}
-        //Public: Não
-        //Tipo: PUT
-        //Request: { "title": STRING, "description": STRING, “user_id”: INTEGER }
-        //Return Success: { "item" : OBJECT }
-        //Return Fail: { "message" : STRING }
-
         [HttpPut("{idItem}")]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public ListItemDTO Update(int idItem, [FromBody] ListItemDTO listItem)
+        public ActionResult Update(int idItem, [FromBody] ListItemDTO listItem)
         {
-            _serviceListItem.Update(idItem, listItem);
-            listItem.Id = idItem;
+            try
+            {
+                _serviceListItem.Update(idItem, listItem);
+                listItem.Id = idItem;
 
-            return listItem;
+                return Ok(new { item = listItem });
+            }
+            catch
+            {
+                return BadRequest(new { message = "Erro ao atualizar item!" });
+            }
         }
-
-
-        //URI sugerida: / api / v{ n}/ lists /{ ID}/ items /{ ID}
-        //Public: Não
-        //Tipo: DELETE
-        //Request: { "id": INTEGER }
-        //Return Fail: { "message" : STRING }
 
         [HttpDelete("{idItem}")]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-            _serviceListItem.Delete(id);
+            try
+            {
+                _serviceListItem.Delete(id);
+
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest(new { message = "Erro ao excluir!" });
+            }
         }
     }
 }

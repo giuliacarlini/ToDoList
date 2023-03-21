@@ -24,17 +24,9 @@ namespace ToDoList.Features.v1.Controllers
             _userService = service;
         }
 
-
-        //URI sugerida: /api/v{n}/authenticate
-        //Public: SIM
-        //Tipo: POST
-        //Request: { "login": STRING; "password": STRING }
-        //Return Success: { "token": JWT, "user": OBJECT }
-        //Return Fail: { "error" : STRING }
-
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Auth([FromBody] Authenticate autenticacao)
+        public ActionResult Auth([FromBody] Authenticate autenticacao)
         {
             try
             {
@@ -86,17 +78,9 @@ namespace ToDoList.Features.v1.Controllers
         }
 
 
-
-        //URI sugerida: /api/v{n}/authenticate/sso
-        //Public: SIM
-        //Tipo: POST
-        //Request: { "login": STRING; "app_token": STRING }
-        //Return Success: { "token": JWT, "user": OBJECT }
-        //Return Fail: { "error" : STRING }
-
         [HttpPost("sso")]
         [AllowAnonymous]
-        public async Task<IActionResult> AuthSSO([FromBody] AuthenticateSSO autenticacaoSSO)
+        public ActionResult AuthSSO([FromBody] AuthenticateSSO autenticacaoSSO)
         {
             try
             {

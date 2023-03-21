@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Features.v1.Database.DTOs;
-using ToDoList.Features.v1.Database.EntityFramework.Data;
-using ToDoList.Features.v1.Models;
 using ToDoList.Features.v1.Services;
 
 namespace ToDoList.Features.v1.Controllers
@@ -14,18 +12,12 @@ namespace ToDoList.Features.v1.Controllers
     public class UserController : ControllerBase
     {
 
-        private readonly IUserService _service;
+        private readonly IUserService _serviceUser;
 
         public UserController(IUserService service)
         {
-            _service = service;
+            _serviceUser = service;
         }
-
-        //URI sugerida: /api/v{n}/users/{ID}
-        //Public: NÃO
-        //Tipo: GET
-        //Return Success: { "user" : OBJECT }
-        //Return Fail: { "error" : STRING }
 
         [HttpGet("{id}")]
         [MapToApiVersion("1.0")]
@@ -34,7 +26,7 @@ namespace ToDoList.Features.v1.Controllers
         {
             try
             {
-                var userDTO = _service.GetById(id);
+                var userDTO = _serviceUser.GetById(id);
 
                 if (userDTO == null)
                 {
@@ -51,13 +43,6 @@ namespace ToDoList.Features.v1.Controllers
             }
         }
 
-        //URI sugerida: /api/v{n}/users
-        //Public: Não
-        //Tipo: POST
-        //Request: { "name": STRING, "email": STRING, "login": STRING; "password": STRING}
-        //Return Success: { "user" : OBJECT }
-        //Return Fail: { "error" : STRING }
-
         [HttpPost]
         [MapToApiVersion("1.0")]
         [Authorize]
@@ -65,12 +50,9 @@ namespace ToDoList.Features.v1.Controllers
         {
             try
             {
-                UserDTO userDTO = _service.Add(UserDTO);
+                UserDTO userDTO = _serviceUser.Add(UserDTO);
 
-                return Ok(new
-                {
-                    userDTO
-                });
+                return Ok( new { user = userDTO });
             }
             catch
             {
@@ -79,13 +61,6 @@ namespace ToDoList.Features.v1.Controllers
 
         }
 
-        //URI sugerida: /api/v{n}/users/{ID}
-        //Public: Não
-        //Tipo: PUT
-        //Request: { "name": STRING, "email": STRING, "login": STRING; "password": STRING  }
-        //Return Success: { "user" : OBJECT }
-        //Return Fail: { "error" : STRING }
-
         [HttpPut("{id}")]
         [MapToApiVersion("1.0")]
         [Authorize]
@@ -93,18 +68,15 @@ namespace ToDoList.Features.v1.Controllers
         {
             try
             {
-                _service.Update(id, userDTO);
+                _serviceUser.Update(id, userDTO);
 
                 userDTO.Id = id;
 
-                return Ok(new
-                {
-                   user = userDTO
-                });
+                return Ok( new { user = userDTO });
             }
             catch
             {
-                return BadRequest(new { error = "Erro ao alterar o usuário." });
+                return BadRequest( new { error = "Erro ao alterar o usuário." });
             }
         }
     }

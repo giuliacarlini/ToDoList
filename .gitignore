@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/ToDoList/Features/v1/Database/ToDoList.db
+/ToDoList/Features/v1/Database/ToDoList.db-shm
+/ToDoList/Features/v1/Database/ToDoList.db-wal
