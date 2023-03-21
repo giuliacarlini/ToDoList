@@ -15,8 +15,8 @@
 
 ## :white_check_mark: Features
 
-* Web Api construida com Asp.net core API
-* Crud utilizando ORM Entity Framework Core
+* Web Api construída com ASP.Net Core API
+* CRUD utilizando ORM Entity Framework Core
 * Utilizado em repository patterns e interfaces para fazer gestão de desacoplamento
 
 
@@ -28,9 +28,9 @@ Esse projeto foi desenvolvido usando as seguintes tecnologias:
 - Entity Framework Core 7.0
 
 Conceitos/Técnicas utilizadas:
-- Data Transfer Object [DTO]
-- Repository Pattern
-- Injeção de dependências
+- Data Transfer Object [DTO];
+- Repository Pattern;
+- Injeção de Dependências.
 
 ## :gear: Arquitetura
 
