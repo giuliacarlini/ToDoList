@@ -13,7 +13,7 @@ namespace ToDoList.Features.v1.Database
         {
             _context = context;
         }
-        public User SearchUserById(int id)
+        public User GetUserById(int id)
         {
             return _context.Users.Where(x => x.Id == id).First();
         }
@@ -45,6 +45,11 @@ namespace ToDoList.Features.v1.Database
         public User GetUserByLogin(string login)
         {
             return _context.Users.Where(x => x.Login.ToLower() == login.ToLower()).FirstOrDefault();
+        }
+
+        public int Count()
+        {
+            return _context.Users.Count();
         }
     }
 }

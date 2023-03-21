@@ -18,7 +18,7 @@ namespace ToDoList.Features.v1.Services
         {
             List<ListItemDTO> listItensDTO = new List<ListItemDTO>();            
 
-            IEnumerable<ListItem> _listItems = _repository.GetListItensByID(id);
+            IEnumerable<ListItem> _listItems = _repository.GetListByID(id);
 
             ListItemDTO listItemDTO;
 

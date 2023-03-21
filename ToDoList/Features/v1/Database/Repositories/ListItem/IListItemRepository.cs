@@ -9,7 +9,6 @@ namespace ToDoList.Features.v1.Database
         int AddListItem(ListItem listItem);
         ListItem GetListItemByID(int id);
         void UpdateListItem(ListItem _listItem);
-
         void DeleteListItem(int id);
     }
 }

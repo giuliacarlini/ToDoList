@@ -14,11 +14,19 @@ namespace ToDoList.Features.v1.Services.Users
         {
             _repository = repository;
         }
-        public UserDTO SearchById(int id)
+        public UserDTO? GetById(int id)
         {
+            User? user;
+            UserDTO? userDTO;
 
-            var user = _repository.SearchUserById(id);
-            UserDTO userDTO = null;
+            try
+            {
+                user = _repository.GetUserById(id);
+            }
+            catch
+            {
+                user = null;
+            }
 
             if (user != null)
             {
@@ -30,9 +38,13 @@ namespace ToDoList.Features.v1.Services.Users
                     Login = user.Login,
                     Password = user.Password
                 };
-            }
 
-            return userDTO;
+                return userDTO;
+            }
+            else 
+            {
+                return null;
+            };            
         }
 
         public UserDTO Add(UserDTO userDTO)
@@ -108,6 +120,11 @@ namespace ToDoList.Features.v1.Services.Users
             {
                 return null;
             }            
+        }
+
+        public int Count()
+        {
+            return _repository.Count();
         }
     }
 }

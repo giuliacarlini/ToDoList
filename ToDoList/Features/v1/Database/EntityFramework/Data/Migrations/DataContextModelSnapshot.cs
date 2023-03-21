@@ -7,7 +7,7 @@ using ToDoList.Features.v1.Database.EntityFramework.Data;
 
 #nullable disable
 
-namespace ToDoList.Data.Migrations
+namespace ToDoList.features.v1.database.entityframework.data.migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -17,31 +17,34 @@ namespace ToDoList.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
 
-            modelBuilder.Entity("ToDoList.Features.v1.Model.List", b =>
+            modelBuilder.Entity("ToDoList.Features.v1.Models.List", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
+                        .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("User_id")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("List");
                 });
 
-            modelBuilder.Entity("ToDoList.Features.v1.Model.ListItem", b =>
+            modelBuilder.Entity("ToDoList.Features.v1.Models.ListItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("ListItemId")
@@ -54,6 +57,8 @@ namespace ToDoList.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("User_id")
@@ -66,7 +71,7 @@ namespace ToDoList.Data.Migrations
                     b.ToTable("ListItem");
                 });
 
-            modelBuilder.Entity("ToDoList.Features.v1.Model.User", b =>
+            modelBuilder.Entity("ToDoList.Features.v1.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,18 +79,22 @@ namespace ToDoList.Data.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
+                        .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Login")
                         .IsRequired()
+                        .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -93,14 +102,14 @@ namespace ToDoList.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ToDoList.Features.v1.Model.ListItem", b =>
+            modelBuilder.Entity("ToDoList.Features.v1.Models.ListItem", b =>
                 {
-                    b.HasOne("ToDoList.Features.v1.Model.ListItem", null)
+                    b.HasOne("ToDoList.Features.v1.Models.ListItem", null)
                         .WithMany("ListItems")
                         .HasForeignKey("ListItemId");
                 });
 
-            modelBuilder.Entity("ToDoList.Features.v1.Model.ListItem", b =>
+            modelBuilder.Entity("ToDoList.Features.v1.Models.ListItem", b =>
                 {
                     b.Navigation("ListItems");
                 });

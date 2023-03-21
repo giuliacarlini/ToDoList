@@ -64,8 +64,13 @@ namespace ToDoList.Features.v1.Controllers
         {
             try
             {
-                ListDTO _list = _serviceList.GetByID(listItem.List_id); //_context.List.Where(x => x.Id == listItem.List_id).First();
-                UserDTO _user = _serviceUser.SearchById(listItem.User_id); //_context.Users.Where(x => x.Id == listItem.User_id).First();
+                var _list = _serviceList.GetByID(listItem.List_id);
+
+                if (_list == null) return BadRequest(new { message = "Não existe lista cadastrada com este código!" });
+ 
+                var _user = _serviceUser.GetById(listItem.User_id);
+
+                if (_user == null) return BadRequest(new { message = "Não existe usuário cadastrada com este código!" });
 
                 if (_user.Id == _list.User_id)
                     return BadRequest(new { message = "O usuário não pode ser igual ao vinculado a lista." });

@@ -34,16 +34,20 @@ namespace ToDoList.Features.v1.Controllers
         {
             try
             {
-                UserDTO userDTO = _service.SearchById(id);
+                var userDTO = _service.GetById(id);
 
-                return Ok(new
+                if (userDTO == null)
                 {
-                    userDTO
-                });
+                    return NotFound( new { error = "Usuário não encontrado" });
+                }
+                else
+                {
+                    return Ok( new { user = userDTO });
+                }
             }
             catch
             {
-                return NotFound(new { error = "Erro ao encontrar o usuário." });
+                return NotFound( new { error = "Erro ao encontrar o usuário." });
             }
         }
 

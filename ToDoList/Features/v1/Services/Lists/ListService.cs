@@ -15,11 +15,20 @@ namespace ToDoList.Features.v1.Services.Lists
             _repository = repository;
         }
 
-        public ListDTO GetByID(int id)
+        public ListDTO? GetByID(int id)
         {
-            List list = _repository.GetListByID(id);
+            List? list;
 
-            ListDTO listDTO = null;
+            try
+            {
+                list = _repository.GetListByID(id);
+            }
+            catch
+            {
+                list = null;
+            }
+
+            ListDTO? listDTO;
 
             if (list != null)
             {
@@ -29,9 +38,14 @@ namespace ToDoList.Features.v1.Services.Lists
                     Title = list.Title,
                     User_id = list.User_id
                 };
-            }
 
-            return listDTO;           
+                return listDTO;
+            }
+            else
+            {
+                return null;
+            }
+                    
         }
 
         public ListDTO Add(ListDTO listDTO)

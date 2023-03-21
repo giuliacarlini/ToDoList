@@ -4,10 +4,11 @@ namespace ToDoList.Features.v1.Services
 {
     public interface IUserService
     {
-        UserDTO SearchById(int id);
+        UserDTO? GetById(int id);
         UserDTO Add(UserDTO userDTO);
         void Update(int id, UserDTO userDTO);
         UserDTO GetByEmail(string email);
         UserDTO GetByLogin(string login);
+        int Count();
     }
 }

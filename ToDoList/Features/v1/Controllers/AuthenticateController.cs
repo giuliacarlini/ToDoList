@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ToDoList.Features.v1.Database.DTOs;
 using ToDoList.Features.v1.Database.EntityFramework.Data;
 using ToDoList.Features.v1.Models;
 using ToDoList.Features.v1.Services;
@@ -39,6 +40,20 @@ namespace ToDoList.Features.v1.Controllers
             {
                 if (autenticacao.email != null && autenticacao.password != null)
                 {
+                    if (_userService.Count() == 0)
+                    {
+                        UserDTO userDTO = new UserDTO()
+                        {
+                            Name = "Administrador",
+                            Email = "adm@adm.com",
+                            Login = "adm",
+                            Password = "123"
+                        };
+
+                        _userService.Add(userDTO);
+
+                    }
+
                     var userExists = _userService.GetByEmail(autenticacao.email);
 
                     if (userExists == null)

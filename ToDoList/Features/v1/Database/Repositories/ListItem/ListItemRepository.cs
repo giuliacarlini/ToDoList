@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
-using ToDoList.Features.v1.Database.EntityFramework.Data;
+﻿using ToDoList.Features.v1.Database.EntityFramework.Data;
 using ToDoList.Features.v1.Models;
 
 namespace ToDoList.Features.v1.Database
