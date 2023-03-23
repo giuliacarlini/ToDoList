@@ -7,8 +7,9 @@ namespace ToDoList.Features.v1.Services
         UserDTO? GetById(int id);
         UserDTO Add(UserDTO userDTO);
         void Update(int id, UserDTO userDTO);
-        UserDTO GetByEmail(string email);
-        UserDTO GetByLogin(string login);
+        UserDTO? GetByEmail(string email);
+        UserDTO? GetByLogin(string login);
         int Count();
+        string ValidarCampos(UserDTO userDTO);
     }
 }

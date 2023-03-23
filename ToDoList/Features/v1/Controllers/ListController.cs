@@ -44,7 +44,7 @@ namespace ToDoList.Features.v1.Controllers
 
                 return Ok(new
                 {
-                    list = new { title = list.Title }
+                    list = new { title = list.Title, list.Id }
                 });
             }
             catch

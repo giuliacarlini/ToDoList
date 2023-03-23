@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace ToDoList.Features.v1.Models

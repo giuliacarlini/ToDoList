@@ -46,13 +46,21 @@ namespace ToDoList.Features.v1.Controllers
         [HttpPost]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public ActionResult Post([FromBody] UserDTO UserDTO)
+        public ActionResult Post([FromBody] UserDTO userDTO)
         {
             try
             {
-                UserDTO userDTO = _serviceUser.Add(UserDTO);
+                string mensagemErro = _serviceUser.ValidarCampos(userDTO);
 
-                return Ok( new { user = userDTO });
+                if (mensagemErro.Length > 0)
+                {
+                    return BadRequest(new { mensagemErro });
+                }
+                else
+                {
+                    userDTO = _serviceUser.Add(userDTO);
+                    return Ok(new { user = userDTO });
+                }
             }
             catch
             {
@@ -79,5 +87,6 @@ namespace ToDoList.Features.v1.Controllers
                 return BadRequest( new { error = "Erro ao alterar o usuário." });
             }
         }
+
     }
 }
