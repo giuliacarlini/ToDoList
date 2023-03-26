@@ -71,7 +71,7 @@ namespace ToDoList.Features.v1.Controllers
                 }
 
             }
-            catch 
+            catch
             {
                 return BadRequest(new { error = "Ocorreu algum erro interno na aplicação, por favor tente novamente." });
             }

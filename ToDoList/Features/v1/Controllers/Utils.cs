@@ -18,7 +18,7 @@ namespace ToDoList.Features.v1.Controller
             {
                 _listItem.ListItems = _context.ListItem.Where(x => x.ListItem_id == _listItem.Id);
 
-                if (_listItem.ListItems == null) 
+                if (_listItem.ListItems == null)
                     break;
                 else
                     RetornaItens(_listItem.ListItems);

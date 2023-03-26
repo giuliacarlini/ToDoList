@@ -51,7 +51,7 @@ namespace ToDoList.Features.v1.Controllers
                 var _list = _serviceList.GetByID(listItem.List_id);
 
                 if (_list == null) return BadRequest(new { message = "Não existe lista cadastrada com este código!" });
- 
+
                 var _user = _serviceUser.GetById(listItem.User_id);
 
                 if (_user == null) return BadRequest(new { message = "Não existe usuário cadastrada com este código!" });

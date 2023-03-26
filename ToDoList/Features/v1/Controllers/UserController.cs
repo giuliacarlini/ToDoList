@@ -30,16 +30,16 @@ namespace ToDoList.Features.v1.Controllers
 
                 if (userDTO == null)
                 {
-                    return NotFound( new { error = "Usuário não encontrado" });
+                    return NotFound(new { error = "Usuário não encontrado" });
                 }
                 else
                 {
-                    return Ok( new { user = userDTO });
+                    return Ok(new { user = userDTO });
                 }
             }
             catch
             {
-                return NotFound( new { error = "Erro ao encontrar o usuário." });
+                return NotFound(new { error = "Erro ao encontrar o usuário." });
             }
         }
 
@@ -80,11 +80,11 @@ namespace ToDoList.Features.v1.Controllers
 
                 userDTO.Id = id;
 
-                return Ok( new { user = userDTO });
+                return Ok(new { user = userDTO });
             }
             catch
             {
-                return BadRequest( new { error = "Erro ao alterar o usuário." });
+                return BadRequest(new { error = "Erro ao alterar o usuário." });
             }
         }
 

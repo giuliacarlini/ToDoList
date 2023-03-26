@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["ToDoList/ToDoList.csproj", "ToDoList/"]
-RUN dotnet restore "ToDoList/ToDoList.csproj"
+COPY ["ToDoList/ToDoList.API.csproj", "ToDoList/"]
+RUN dotnet restore "ToDoList/ToDoList.API.csproj"
 COPY . .
 WORKDIR "/src/ToDoList"
-RUN dotnet build "ToDoList.csproj" -c Release -o /app/build
+RUN dotnet build "ToDoList.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "ToDoList.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "ToDoList.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ToDoList.dll"]
+ENTRYPOINT ["dotnet", "ToDoList.API.dll"]

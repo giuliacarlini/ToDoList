@@ -1,6 +1,6 @@
 ﻿using ToDoList.Features.v1.Database;
-using ToDoList.Features.v1.Models;
 using ToDoList.Features.v1.Database.DTOs;
+using ToDoList.Features.v1.Models;
 
 namespace ToDoList.Features.v1.Services.Users
 {
@@ -28,7 +28,7 @@ namespace ToDoList.Features.v1.Services.Users
 
             if (user != null)
             {
-                userDTO = new ()
+                userDTO = new()
                 {
                     Id = user.Id,
                     Name = user.Name,
@@ -39,10 +39,10 @@ namespace ToDoList.Features.v1.Services.Users
 
                 return userDTO;
             }
-            else 
+            else
             {
                 return null;
-            };            
+            };
         }
 
         public UserDTO? GetByEmail(string email)
@@ -51,7 +51,7 @@ namespace ToDoList.Features.v1.Services.Users
 
             if (user != null)
             {
-                UserDTO userDTO = new ()
+                UserDTO userDTO = new()
                 {
                     Id = user.Id,
                     Name = user.Name,
@@ -101,7 +101,7 @@ namespace ToDoList.Features.v1.Services.Users
 
             }
 
-            User user = new ()
+            User user = new()
             {
                 Name = userDTO.Name.Substring(1, 100),
                 Email = userDTO.Email.Substring(1, 80),
@@ -116,7 +116,7 @@ namespace ToDoList.Features.v1.Services.Users
 
         public void Update(int id, UserDTO userDTO)
         {
-            User user = new ()
+            User user = new()
             {
                 Id = id,
                 Name = userDTO.Name.Substring(1, 100),
@@ -130,8 +130,9 @@ namespace ToDoList.Features.v1.Services.Users
 
         public string ValidarCampos(UserDTO userDTO)
         {
-            if (userDTO.Name.Length < 10) { 
-                return "O nome do usuário não pode ser menor que 10 caracteres."; 
+            if (userDTO.Name.Length < 10)
+            {
+                return "O nome do usuário não pode ser menor que 10 caracteres.";
             }
 
             if (userDTO.Name.Length > 100)

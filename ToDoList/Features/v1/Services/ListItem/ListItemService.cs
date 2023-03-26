@@ -16,7 +16,7 @@ namespace ToDoList.Features.v1.Services
 
         public IEnumerable<ListItemDTO> GetItensByID(int id)
         {
-            List<ListItemDTO> listItensDTO = new List<ListItemDTO>();            
+            List<ListItemDTO> listItensDTO = new List<ListItemDTO>();
 
             IEnumerable<ListItem> _listItems = _repository.GetListByID(id);
 
@@ -41,12 +41,12 @@ namespace ToDoList.Features.v1.Services
         }
 
         public List<ListItemDTO> RetornaItens(List<ListItemDTO> listItems)
-        {            
+        {
             foreach (ListItemDTO _listItem in listItems)
             {
                 List<ListItemDTO> listItensDTO = new List<ListItemDTO>();
 
-                IEnumerable<ListItem> _list  = _repository.GetListItensByID(_listItem.Id);
+                IEnumerable<ListItem> _list = _repository.GetListItensByID(_listItem.Id);
 
                 foreach (ListItem item in _list)
                 {
