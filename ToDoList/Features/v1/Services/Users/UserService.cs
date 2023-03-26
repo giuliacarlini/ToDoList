@@ -103,10 +103,10 @@ namespace ToDoList.Features.v1.Services.Users
 
             User user = new()
             {
-                Name = userDTO.Name.Substring(1, 100),
-                Email = userDTO.Email.Substring(1, 80),
-                Login = userDTO.Login.Substring(1, 80),
-                Password = userDTO.Password.Substring(1, 30)
+                Name = userDTO.Name,
+                Email = userDTO.Email,
+                Login = userDTO.Login,
+                Password = userDTO.Password
             };
 
             userDTO.Id = _repository.AddUser(user);
@@ -119,10 +119,10 @@ namespace ToDoList.Features.v1.Services.Users
             User user = new()
             {
                 Id = id,
-                Name = userDTO.Name.Substring(1, 100),
-                Email = userDTO.Email.Substring(1, 80),
-                Login = userDTO.Login.Substring(1, 80),
-                Password = userDTO.Password.Substring(1, 30)
+                Name = userDTO.Name,
+                Email = userDTO.Email,
+                Login = userDTO.Login,
+                Password = userDTO.Password
             };
 
             _repository.UpdateUser(user);
