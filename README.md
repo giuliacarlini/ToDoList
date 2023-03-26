@@ -39,7 +39,7 @@ Conceitos/Técnicas utilizadas:
 ## :gear: Arquitetura
 
 ```🌐
-src
+ToDoList.API
 ├── 📂 Controllers      [Rotas para endpoints]
 ├── 📂 Models           [Modelos do banco de dados]
 ├── 📂 Services         [Regras de negócio]
