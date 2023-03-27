@@ -67,7 +67,7 @@ git clone https://github.com/giuliacarlini/ToDoList.git
 
 3. Faça a restauração das dependências
 
-Utilize o comando 'dotnet restore' para fazer a restauração dos pacotes nuggets
+Utilize o comando **'dotnet restore'** para fazer a restauração dos pacotes nuggets
 
 4. Criação do banco de dados
 
@@ -79,6 +79,20 @@ O BD será criado vazio conforme configuração no app.json.
 
 5. Rode a aplicação no Docker
 
+Já existe uma imagem do container no Docker Hub (https://hub.docker.com/repository/docker/giuliacarlini/todolistapi/)
+Caso opte por utiliza-la, é necessario efetuar os seguintes passos:
 
+1. Instalar o Docker localmente (Windows)
+https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe
+
+Efetuar o pull da imagem docker
+```
+docker pull giuliacarlini/todolistapi
+```
+
+Criar um container local
+```
+docker run --name todolistapi -p 8000:80 giuliacarlini/todolistapi
+```
 
 
