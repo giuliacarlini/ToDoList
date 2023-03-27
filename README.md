@@ -57,19 +57,19 @@ ToDoList.API
 
 Clone essa aplicação utilizando o [Git](https://git-scm.com) e siga os próximos passos:
 
-1. Clone esse repositório
+**Clone esse repositório**
 
 ```
 git clone https://github.com/giuliacarlini/ToDoList.git
 ```
 
-2. Abra o projeto no Visual Studio
+**Abra o projeto no Visual Studio**
 
-3. Faça a restauração das dependências
+**Faça a restauração das dependências**
 
 Utilize o comando **'dotnet restore'** para fazer a restauração dos pacotes nuggets
 
-4. Criação do banco de dados
+**Criação do banco de dados**
 
 Abra o terminal na pasta raiz do projeto(./ToDoList/ToDoList.API/), e rode um comando para que o Entity Framework crie o BD
 ```
@@ -77,10 +77,11 @@ dotnet ef database update
 ```
 O BD será criado vazio conforme configuração no app.json.
 
-5. Rode a aplicação no Docker
-
+**Rode a aplicação no Docker**
 
 Já existe uma imagem do container no Docker Hub (https://hub.docker.com/repository/docker/giuliacarlini/todolistapi/)
+
+
 Caso opte por utiliza-la, é necessario efetuar os seguintes passos:
 
 
