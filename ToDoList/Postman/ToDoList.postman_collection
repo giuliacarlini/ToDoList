@@ -1,0 +1,754 @@
+{
+	"info": {
+		"_postman_id": "c7cacbe4-5738-4e88-87fe-2fee8e22a514",
+		"name": "ToDoList Teste Login e Cadastro",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3125125"
+	},
+	"item": [
+		{
+			"name": "Authenticate",
+			"item": [
+				{
+					"name": "Post Authenticate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"if (pm.response.code == \"200\") {\r",
+									"    pm.collectionVariables.set(\"login_sistema\", jsonData.user.login);\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.token);\r",
+									"} else {\r",
+									"    pm.collectionVariables.set(\"login_sistema\", \"\");\r",
+									"    pm.collectionVariables.set(\"token\", \"\"); \r",
+									"}\r",
+									"\r",
+									"pm.test(\"Sistema autenticado\", function() {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.json;\r",
+									"    pm.response.to.be.withBody;\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"login_sistema\", \"\");\r",
+									"pm.collectionVariables.set(\"token\", \"\");\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"adm@adm.com\",\r\n  \"password\": \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/authenticate",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Authenticate SSO",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"if (pm.response.code == \"200\") {\r",
+									"    pm.collectionVariables.set(\"user_id\", jsonData.user.id);\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Autenticação por login e token OK\", function() {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.json;\r",
+									"    pm.response.to.be.withBody;\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"login\": \"{{login_sistema}}\",\r\n  \"app_token\": \"{{token}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/authenticate/sso",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"authenticate",
+								"sso"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Post User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"\r",
+									"pm.test(\"Novo usuário OK\", function() {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.json;\r",
+									"    pm.response.to.be.withBody;\r",
+									"\r",
+									"    console.log(\" Usuário novo - Id: \"+jsonData.user.id+\" | Nome: \"+jsonData.user.name);\r",
+									"})\r",
+									"\r",
+									"if (pm.response.code != \"200\") {\r",
+									"    console.log(jsonData);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"name_user\", pm.iterationData.get(\"name\"));\r",
+									"pm.collectionVariables.set(\"email_user\", pm.iterationData.get(\"email\"));\r",
+									"pm.collectionVariables.set(\"login_user\", pm.iterationData.get(\"login\"));\r",
+									"pm.collectionVariables.set(\"password_user\", pm.iterationData.get(\"password\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 0,\r\n  \"name\": \"{{name_user}}\",\r\n  \"email\": \"{{email_user}}\",\r\n  \"login\": \"{{login_user}}\",\r\n  \"password\": \"{{password_user}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/users/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Sistema autenticado\", function() {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.json;\r",
+									"    pm.response.to.be.withBody;\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/users/{{user_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "List",
+			"item": [
+				{
+					"name": "Post List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"list_id\", jsonData.list.id);\r",
+									"\r",
+									"\r",
+									"pm.test(\"Adicionar lista\", function() {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.json;\r",
+									"    pm.response.to.be.withBody;\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 0,\r\n  \"title\": \"Lista {{user_id}}\",\r\n  \"user_id\": \"{{user_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/lists/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"lists",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"pegar listas\", function() {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.json;\r",
+									"    pm.response.to.be.withBody;\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/lists/{{list_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "ListItem",
+			"item": [
+				{
+					"name": "Post Item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"\r",
+									"if (pm.response.code == \"200\"){\r",
+									"    pm.collectionVariables.set(\"listitem_id\", jsonData.item.id);\r",
+									"}\r",
+									"\r",
+									"\r",
+									"pm.test(\"Adicionar item lista\", function() {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.json;\r",
+									"    pm.response.to.be.withBody;\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 0,\r\n  \"title\": \"Teste {{list_id}}\",\r\n  \"description\": \"Teste {{list_id}}\",\r\n  \"user_id\": 2,\r\n  \"list_id\": {{list_id}},\r\n  \"listItem_id\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/list/{{list_id}}/items",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"list",
+								"{{list_id}}",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Pegar Items\", function() {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.json;\r",
+									"    pm.response.to.be.withBody;\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/list/{{list_id}}/items",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"list",
+								"{{list_id}}",
+								"items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Alteração ListItem\", function() {\r",
+									"    pm.response.to.be.ok;\r",
+									"    pm.response.to.json;\r",
+									"    pm.response.to.be.withBody;\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 0,\r\n  \"title\": \"string\",\r\n  \"description\": \"string\",\r\n  \"user_id\": {{user_id}},\r\n  \"list_id\": {{list_id}},\r\n  \"listItem_id\": 0\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/list/{{list_id}}/items/{{listitem_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"list",
+								"{{list_id}}",
+								"items",
+								"{{listitem_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "login",
+			"value": ""
+		},
+		{
+			"key": "user_id",
+			"value": ""
+		},
+		{
+			"key": "list_id",
+			"value": ""
+		},
+		{
+			"key": "listitem_id",
+			"value": ""
+		},
+		{
+			"key": "login_sistema",
+			"value": ""
+		},
+		{
+			"key": "name_user",
+			"value": ""
+		},
+		{
+			"key": "email_user",
+			"value": ""
+		},
+		{
+			"key": "login_user",
+			"value": ""
+		},
+		{
+			"key": "password_user",
+			"value": ""
+		}
+	]
+}
