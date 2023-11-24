@@ -12,9 +12,11 @@ namespace ToDoList.Infrastructure.Repositories
         {
             _context = context;
         }
-        public User GetUserById(int id)
+        public User? GetUserById(int id)
         {
-            return _context.Users.First(x => x.Id == id);
+            var user = _context.Users.First(x => x.Id == id);
+
+            return user;
         }
 
         public int AddUser(User user)
@@ -24,15 +26,9 @@ namespace ToDoList.Infrastructure.Repositories
 
             return user.Id;
         }
-        public void UpdateUser(User userUpdate)
+        public void UpdateUser(User user)
         {
-            var user = _context.Users.First(x => x.Id == userUpdate.Id);
-            user.Name = userUpdate.Name;
-            user.Email = userUpdate.Email;
-            user.Login = userUpdate.Login;
-            user.Password = userUpdate.Password;
-
-            _context.Update(userUpdate);
+            _context.Update(user);
             _context.SaveChanges();
         }
 

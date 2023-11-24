@@ -77,7 +77,7 @@ namespace ToDoList.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("Login")
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("TEXT");

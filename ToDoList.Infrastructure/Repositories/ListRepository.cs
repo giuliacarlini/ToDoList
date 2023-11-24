@@ -18,12 +18,12 @@ namespace ToDoList.Infrastructure.Repositories
             return _context.Lists.FirstOrDefault(x => x.Id == id);
         }
 
-        public int AddList(List list)
+        public List AddList(List list)
         {
             _context.Add(list);
             _context.SaveChanges();
 
-            return list.Id;
+            return list;
         }
 
         public void DeleteList(int id)

@@ -60,14 +60,7 @@ namespace ToDoList.Domain.Handlers
             if (user.Id == list.UserId)
                 return new CommandResponse(false, "O usuário não pode ser igual ao vinculado a lista.");
 
-
-            var listItem = new ListItem()
-            {
-                Title = command.Title,
-                Description = command.Description,
-                IdUser = command.IdUser,
-                IdList = command.IdList
-            };
+            var listItem = new ListItem(command.Title, command.Description, command.IdUser, command.IdList);
 
             _listItemRepository.AddListItem(listItem);
 
@@ -80,10 +73,7 @@ namespace ToDoList.Domain.Handlers
 
             if (listItem == null) return new CommandResponse(false, "A lista está inválida");
 
-            listItem.Title = command.Title;
-            listItem.Description = command.Description;
-            listItem.IdUser = command.IdUser;
-            listItem.IdList = command.IdList;
+            listItem.Refresh(command.Title,command.Description);
 
             _listItemRepository.UpdateListItem(listItem);
 

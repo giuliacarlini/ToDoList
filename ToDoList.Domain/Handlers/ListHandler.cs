@@ -11,11 +11,12 @@ namespace ToDoList.Domain.Handlers
     public class ListHandler: IHandler<CreateListRequest>, IHandler<GetListRequest>, IHandler<DeleteListRequest>
     {
         private readonly IListRepository _listRepository;
+        private readonly IUserRepository _userRepository;
 
-        public ListHandler(IListRepository listRepository) 
+        public ListHandler(IListRepository listRepository, IUserRepository userRepository) 
         {
             _listRepository = listRepository;   
-        
+            _userRepository = userRepository;
         }
 
         public ICommandResult Handle(GetListRequest command)
@@ -35,16 +36,15 @@ namespace ToDoList.Domain.Handlers
 
         public ICommandResult Handle(CreateListRequest command)
         {
-            var list = new List()
-            {
-                Id = command.Id,
-                Title = command.Title,
-                UserId = command.IdUser
-            };
+            var user = _userRepository.GetUserByLogin(command.LoginUser);
 
-            _listRepository.AddList(list);
+            if (user == null) return new CommandResponse(false, "Login não cadastrado.");
 
-            return new CommandResponse();
+            var list = new List(command.Title, user.Id);
+
+            var listResult = _listRepository.AddList(list);
+
+            return new CommandResponse(true, listResult);
         }
 
         public ICommandResult Handle(DeleteListRequest command)

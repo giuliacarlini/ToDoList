@@ -5,7 +5,7 @@ namespace ToDoList.Domain.Adapters.Repositories
     public interface IListRepository
     {
         List? GetListById(int id);
-        int AddList(List list);
+        List AddList(List list);
         void DeleteList(int id);
     }
 }

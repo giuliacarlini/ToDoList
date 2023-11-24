@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ToDoList.Domain.Commands.Request.Authentication;
 using ToDoList.Domain.Commands.Response;
-using ToDoList.Domain.Entities;
 using ToDoList.Domain.Handlers;
 
 namespace ToDoList.API.v1.Controllers
@@ -20,7 +20,7 @@ namespace ToDoList.API.v1.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult Auth([FromServices] AuthenticateHandler handler, [FromBody] Authenticate command)
+        public ActionResult Auth([FromServices] AuthenticateHandler handler, [FromBody] AuthenticateRequest command)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace ToDoList.API.v1.Controllers
 
         [HttpPost("sso")]
         [AllowAnonymous]
-        public ActionResult AuthSso([FromServices] AuthenticateHandler handler, [FromBody] AuthenticateSSO command)
+        public ActionResult AuthSso([FromServices] AuthenticateHandler handler, [FromBody] AuthenticateSsoRequest command)
         {
             try
             {

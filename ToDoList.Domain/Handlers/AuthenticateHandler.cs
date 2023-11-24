@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ToDoList.Domain.Adapters.Handlers;
 using ToDoList.Domain.Adapters.Repositories;
+using ToDoList.Domain.Commands.Request.Authentication;
 using ToDoList.Domain.Commands.Response;
 using ToDoList.Domain.Entities;
 
 namespace ToDoList.Domain.Handlers
 {
-    public class AuthenticateHandler : IHandler<Authenticate>
+    public class AuthenticateHandler : IHandler<AuthenticateRequest>
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
@@ -17,31 +18,21 @@ namespace ToDoList.Domain.Handlers
             _configuration = configuration;
         }
 
-        public ICommandResult Handle(Authenticate command)
+        public ICommandResult Handle(AuthenticateRequest command)
         {
-            if (command.Email == null || command.Password == null)
-                return new CommandResponse(false);
-            
             if (_userRepository.Count() == 0)
             {
-                var user = new User()
-                {
-                    Name = "Administrator",
-                    Email = "adm@adm.com",
-                    Login = "adm",
-                    Password = "123"
-                };
-
+                var user = new User("Administrator", "adm@adm.com", "adm", "123");
                 _userRepository.AddUser(user);
             }
 
-            var userExists = _userRepository.GetUserByEmail(command.Email);
+            var userExists = _userRepository.GetUserByLogin(command.Login);
 
             if (userExists == null)
-                return new CommandResponse(false, "Email e/ou senha está(ão) inválido(s).");
+                return new CommandResponse(false, "Login e/ou senha está(ão) inválido(s).");
 
             if (userExists.Password != command.Password)
-                return new CommandResponse(false, "Email e/ou senha está(ão) inválido(s).");
+                return new CommandResponse(false, "Login e/ou senha está(ão) inválido(s).");
 
             var secretJwtKey = _configuration["TokenConfigurations:SecretJwtKey"] ?? "";
             var seconds = _configuration["TokenConfigurations:Seconds"] ?? "";
@@ -51,19 +42,16 @@ namespace ToDoList.Domain.Handlers
             return new CommandResponse(true, token);
         }
 
-        public ICommandResult Handle(AuthenticateSSO command)
+        public ICommandResult Handle(AuthenticateSsoRequest command)
         {
-            if (command.App_token == null || command.Login == null) 
-                return new CommandResponse(false, "");
-
             var userExists = _userRepository.GetUserByEmail(command.Login);
 
             if (userExists == null)
-                return new CommandResponse(false, "");
+                return new CommandResponse(false, "Usuário inválido.");
 
             var secretJwtKey = _configuration["TokenConfigurations:SecretJwtKey"];
 
-            var valid = JwtAuth.ValidateToken(secretJwtKey, command.App_token, out var mensagemErro);
+            var valid = JwtAuth.ValidateToken(secretJwtKey, command.AppToken, out var errorMessage);
 
             return new CommandResponse(valid, "");
         }

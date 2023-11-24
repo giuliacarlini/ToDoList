@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Commands.Request;
 using ToDoList.Domain.Commands.Request.List;
+using ToDoList.Domain.Commands.Response;
 using ToDoList.Domain.Handlers;
 
 namespace ToDoList.API.v1.Controllers;
@@ -16,9 +17,9 @@ public class ListController : ControllerBase
     {
         try
         {
-            var result = handler.Handle(command);
+            var result = (CommandResponse)handler.Handle(command);
 
-            return Ok(result);
+            return result.Success ? Ok(result) : NotFound(result);
         }
         catch
         {
@@ -32,9 +33,9 @@ public class ListController : ControllerBase
     {
         try
         {
-            var result = handler.Handle(command);
+            var result = (CommandResponse)handler.Handle(command);
 
-            return Ok(result);
+            return result.Success ? Ok(result) : NotFound(result);
         }
         catch
         {
@@ -48,9 +49,9 @@ public class ListController : ControllerBase
     {
         try
         {
-            var result = handler.Handle(command);
+            var result = (CommandResponse)handler.Handle(command);
 
-            return Ok(result);
+            return result.Success ? Ok(result) : NotFound(result);
         }
         catch
         {

@@ -12,7 +12,5 @@ namespace ToDoList.Domain.Commands.Request.ListItem
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public int IdUser { get; set; }
-        public int IdList { get; set; }
     }
 }

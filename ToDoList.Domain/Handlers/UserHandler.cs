@@ -12,7 +12,9 @@ using ToDoList.Domain.Entities;
 
 namespace ToDoList.Domain.Handlers
 {
-    public class UserHandler : IHandler<CreateUserRequest>, IHandler<GetUserByIdRequest>, IHandler<UpdateUserRequest>
+    public class UserHandler: IHandler<CreateUserRequest>, 
+                              IHandler<GetUserByIdRequest>, 
+                              IHandler<UpdateUserRequest>
     {
         private readonly IUserRepository _userRepository;
 
@@ -23,17 +25,13 @@ namespace ToDoList.Domain.Handlers
 
         public ICommandResult Handle(CreateUserRequest command)
         {
-            var user = new User()
-            {
-                Name = command.Name,
-                Email = command.Email,
-                Login = command.Login,
-                Password = command.Password
-            };
+            var user = new User(command.Name, command.Email, command.Login, command.Password);
 
             _userRepository.AddUser(user);
 
-            return new CommandResponse(true);
+            var userResponse = new UserResponse(user.Id, user.Name, user.Email, user.Login);
+
+            return new CommandResponse(true, userResponse);
         }
 
         public ICommandResult Handle(UpdateUserRequest command)
@@ -42,9 +40,7 @@ namespace ToDoList.Domain.Handlers
 
             if (user == null) return new CommandResponse(false, "");
             
-            user.Name = command.Name ?? user.Name;
-            user.Email = command.Email ?? user.Email;
-            user.Login = command.Login ?? user.Login;
+            user.Refresh(command.Name, command.Email, command.Login, command.Password);
 
             _userRepository.UpdateUser(user);
 
@@ -57,12 +53,7 @@ namespace ToDoList.Domain.Handlers
 
             if (user == null) return new CommandResponse(false, "");
 
-            var userResponse = new GetUserResponse()
-            {
-                Name = user.Name,
-                Email = user.Email,
-                Login = user.Login
-            };
+            var userResponse = new UserResponse(user.Id, user.Name, user.Email, user.Login);
 
             return new CommandResponse(true, userResponse);
         }
