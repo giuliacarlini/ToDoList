@@ -1,50 +1,76 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
+using ToDoList.Domain.Adapters.Handlers;
 using ToDoList.Domain.Adapters.Repositories;
 using ToDoList.Domain.Commands.Request.List;
 using ToDoList.Domain.Commands.Request.ListItem;
 using ToDoList.Domain.Commands.Request.User;
 using ToDoList.Domain.Commands.Response;
+using ToDoList.Domain.Commands.Response.List;
+using ToDoList.Domain.Commands.Response.User;
 using ToDoList.Domain.Entities;
 using ToDoList.Domain.Handlers;
-using ToDoList.Infrastructure.Context;
 using ToDoList.Infrastructure.Repositories;
 using Xunit;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ToDoList.Tests.Handlers
 {
     public class ListHandlerTests
     {
-        [Fact]
-        public void Tests_create_list()
+        private readonly UserRepository _userRepository;
+        private readonly ListRepository _listRepository;
+
+        public ListHandlerTests()
         {
             var context = new Configuration().ConfigureContext();
+            _userRepository = new UserRepository(context);
+            _listRepository = new ListRepository(context);
+        }
 
-            var userRepository = CreateUser(context, out var handlerUserResult);
+        private CreateUserRequest CreateUserCommand()
+        {
+            return new CreateUserRequest()
+            {
+                Name = "Administrator",
+                Email = "admadmadm@adm.com",
+                Login = "administrador",
+                Password = "1234567890"
+            };
+        }
 
-            Assert.True(handlerUserResult.Success);
+        private CommandResponse CreateUser(UserRepository userRepository)
+        {
+            var handlerUser = new UserHandler(userRepository);
+            return (CommandResponse)handlerUser.Handle(CreateUserCommand());
+        }
+
+        [Fact]
+        public void Test_list_handler_create_success()
+        {
+            var commandResponse = CreateUser(_userRepository);
+
+            var user = (UserResponse)commandResponse.Data!;
 
             var commandCreateListRequest = new CreateListRequest()
             {
                 Title = "Teste de título",
-                LoginUser = "adm"
+                LoginUser = user.Login
             };
 
-            ExecuteListHandlerWithDependecies(context, userRepository, commandCreateListRequest, out var handlerListResult);
+            var handlerList = new ListHandler(_listRepository, _userRepository);
+            var handlerListResult = (CommandResponse)handlerList.Handle(commandCreateListRequest);
 
-            var list = (List)handlerListResult.Data!;
+            var list = (ListResponse)handlerListResult.Data!;
 
             Assert.True(handlerListResult.Success);
             Assert.True(list is { Id: > 0 });
         }
 
         [Fact]
-        public void Tests_create_list_invalid_user()
+        public void Test_list_handler_create_list_invalid_user()
         {
-            var context = new Configuration().ConfigureContext();
-
-            var userRepository = CreateUser(context, out var handlerUserResult);
-
-            Assert.True(handlerUserResult.Success);
+            var commandResponse = CreateUser(_userRepository);
 
             var commandCreateListRequest = new CreateListRequest()
             {
@@ -52,36 +78,45 @@ namespace ToDoList.Tests.Handlers
                 LoginUser = "admWrong"
             };
 
-            ExecuteListHandlerWithDependecies(context, userRepository, commandCreateListRequest, out var handlerListResult);
+            var handlerList = new ListHandler(_listRepository, _userRepository);
+            var handlerListResult = (CommandResponse)handlerList.Handle(commandCreateListRequest);
 
             Assert.False(handlerListResult.Success);
             Assert.NotNull(handlerListResult.Data);
             Assert.True(handlerListResult.Data.ToString() == "Login não cadastrado.");
         }
 
-        private static void ExecuteListHandlerWithDependecies(DataContext context, UserRepository userRepository,
-            CreateListRequest commandCreateListRequest, out CommandResponse result)
-        {
-            var listRepository = new ListRepository(context);
-            var handlerList = new ListHandler(listRepository, userRepository);
-            result = (CommandResponse)handlerList.Handle(commandCreateListRequest);
-        }
 
-        private static UserRepository CreateUser(DataContext context, out CommandResponse handlerUserResult)
+        [Fact]
+        public void Test_list_handler_create_and_delete()
         {
-            var commandCreateUserRequest = new CreateUserRequest()
+            var commandResponse = CreateUser(_userRepository);
+
+            var user = (UserResponse)commandResponse.Data!;
+
+            var commandCreateListRequest = new CreateListRequest()
             {
-                Name = "Administrator",
-                Email = "adm@adm.com",
-                Login = "adm",
-                Password = "123"
+                Title = "Teste de título",
+                LoginUser = user.Login
             };
 
-            var userRepository = new UserRepository(context);
-            var handlerUser = new UserHandler(userRepository);
-            handlerUserResult = (CommandResponse)handlerUser.Handle(commandCreateUserRequest);
+            var handlerList = new ListHandler(_listRepository, _userRepository);
+            var handlerListCreateResult = (CommandResponse)handlerList.Handle(commandCreateListRequest);
 
-            return userRepository;
+            var list = (ListResponse)handlerListCreateResult.Data!;
+
+            var commandDeleteListRequest = new DeleteListRequest()
+            {
+                Id = list.Id,
+            };
+
+            var handlerListDeleteResult = (CommandResponse)handlerList.Handle(commandDeleteListRequest);
+
+            Assert.True(handlerListDeleteResult.Success);
+            Assert.IsType<string>(handlerListDeleteResult.Data);
+            Assert.Contains("Exclusão", handlerListDeleteResult.Data.ToString() ?? string.Empty);
+            
         }
+
     }
 }

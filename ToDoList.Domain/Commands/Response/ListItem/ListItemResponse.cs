@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ToDoList.Domain.Commands.Response.ListItem
 {
-    public class GetListItemResponse
+    public class ListItemResponse
     {
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

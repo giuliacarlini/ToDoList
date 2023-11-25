@@ -8,8 +8,9 @@ using ToDoList.Domain.Adapters.Handlers;
 
 namespace ToDoList.Domain.Commands.Response.List
 {
-    public class GetListResponse : ICommandResult
+    public class ListResponse : ICommandResult
     {
+        public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
     }
 }

@@ -31,7 +31,7 @@ public class ListItemRepository : IListItemRepository
         return listItem.Id;
     }
 
-    public ListItem? GetListItemById(int id)
+    public ListItem GetListItemById(int id)
     {
         return _context.ListItems.First(x => x.Id == id);
     }

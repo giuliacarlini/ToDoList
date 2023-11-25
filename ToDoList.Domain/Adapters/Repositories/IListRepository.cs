@@ -6,6 +6,6 @@ namespace ToDoList.Domain.Adapters.Repositories
     {
         List? GetListById(int id);
         List AddList(List list);
-        void DeleteList(int id);
+        void DeleteList(List list);
     }
 }

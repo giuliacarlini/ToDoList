@@ -27,7 +27,10 @@ namespace ToDoList.Domain.Handlers
         {
             var user = new User(command.Name, command.Email, command.Login, command.Password);
 
-            _userRepository.AddUser(user);
+            if (user.IsValid)
+                _userRepository.AddUser(user);
+            else
+                return new CommandResponse(false, user.Notifications);
 
             var userResponse = new UserResponse(user.Id, user.Name, user.Email, user.Login);
 
@@ -42,7 +45,11 @@ namespace ToDoList.Domain.Handlers
             
             user.Refresh(command.Name, command.Email, command.Login, command.Password);
 
-            _userRepository.UpdateUser(user);
+            if (user.IsValid)
+                _userRepository.UpdateUser(user);
+            else
+                return new CommandResponse(false, user.Notifications);
+
 
             return new CommandResponse(true);
         }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ToDoList.Domain.Adapters.Repositories;
 using ToDoList.Domain.Commands.Request.User;
 using ToDoList.Domain.Handlers;
 
@@ -11,16 +12,21 @@ namespace ToDoList.API.v1.Controllers
 
     public class UserController : ControllerBase
     {
+        private readonly UserHandler _handler;
+
+        public UserController(UserHandler handler)
+        {
+            _handler = handler;
+        }
 
         [HttpGet]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public ActionResult Get([FromBody] GetUserByIdRequest command,
-            [FromServices] UserHandler handler)
+        public ActionResult Get([FromBody] GetUserByIdRequest command)
         {
             try
             {
-                var result = handler.Handle(command);
+                var result = _handler.Handle(command);
                 return Ok(result);
             }
             catch
@@ -32,12 +38,11 @@ namespace ToDoList.API.v1.Controllers
         [HttpPost]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public ActionResult Post([FromBody] CreateUserRequest command,
-            [FromServices] UserHandler handler)
+        public ActionResult Post([FromBody] CreateUserRequest command)
         {
             try
             {
-                var result = handler.Handle(command);
+                var result = _handler.Handle(command);
                 return Ok(result);
             }
             catch
@@ -50,12 +55,11 @@ namespace ToDoList.API.v1.Controllers
         [HttpPut]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public ActionResult Put([FromBody] UpdateUserRequest command,
-            [FromServices] UserHandler handler)
+        public ActionResult Put([FromBody] UpdateUserRequest command)
         {
             try
             {
-                var result = handler.Handle(command);
+                var result = _handler.Handle(command);
                 return Ok(result);
             }
             catch

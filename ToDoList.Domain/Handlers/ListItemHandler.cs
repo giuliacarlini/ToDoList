@@ -33,16 +33,15 @@ namespace ToDoList.Domain.Handlers
 
         public ICommandResult Handle(GetListItemByIdRequest command)
         {
-            var listItems = _listItemRepository.GetListById(command.Id);
+            var listItems = _listItemRepository.GetListItemById(command.Id);
 
-            var listResponse = listItems.Select(item => new GetListItemResponse
-                {
-                    Title = item.Title ?? "",
-                    Description = item.Description ?? "",
-                    IdUser = item.IdUser,
-                    IdList = item.IdList
-                })
-                .ToList();
+            var listResponse = new ListItemResponse()
+            {
+                Description = listItems.Description,
+                IdList = listItems.IdList,
+                IdUser = listItems.IdUser,
+                Title = listItems.Title
+            };
 
             return new CommandResponse(true, listResponse);
         }
@@ -64,27 +63,43 @@ namespace ToDoList.Domain.Handlers
 
             _listItemRepository.AddListItem(listItem);
 
-            return new CommandResponse(true, "Item da lista cadastrada com sucesso!" );
+            var responseListItem = new ListItemResponse()
+            {
+                Description = listItem.Description,
+                IdList = listItem.IdList,
+                Title = listItem.Title,
+                IdUser = listItem.IdUser,
+            };
+
+            return new CommandResponse(true, responseListItem);
         }
 
         public ICommandResult Handle(UpdateListItemRequest command)
         {
             var listItem = _listItemRepository.GetListItemById(command.Id);
 
-            if (listItem == null) return new CommandResponse(false, "A lista está inválida");
+            if (listItem == null) return new CommandResponse(false, "A lista está inválida.");
 
             listItem.Refresh(command.Title,command.Description);
 
             _listItemRepository.UpdateListItem(listItem);
 
-            return new CommandResponse(true, "Item da lista alterado com sucesso");
+            var responseListItem = new ListItemResponse()
+            {
+                Description = listItem.Description,
+                IdList = listItem.IdList,
+                Title = listItem.Title,
+                IdUser = listItem.IdUser,
+            };
+
+            return new CommandResponse(true, responseListItem);
         }
 
         public ICommandResult Handle(DeleteListItemRequest command)
         {
             _listItemRepository.DeleteListItem(command.Id);
 
-            return new CommandResponse(true, "Item da lista excluído com sucesso.");
+            return new CommandResponse(true, "Item excluído com sucesso.");
         }
     }
 }

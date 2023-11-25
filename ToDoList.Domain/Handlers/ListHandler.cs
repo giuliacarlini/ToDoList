@@ -26,12 +26,12 @@ namespace ToDoList.Domain.Handlers
             if (list == null)
                 return new CommandResponse(false);
 
-            var getListResponse = new GetListResponse()
+            var listResponse = new ListResponse()
             {
                 Title = list.Title
             };
             
-            return getListResponse;
+            return new CommandResponse(true, listResponse);
         }
 
         public ICommandResult Handle(CreateListRequest command)
@@ -42,16 +42,24 @@ namespace ToDoList.Domain.Handlers
 
             var list = new List(command.Title, user.Id);
 
-            var listResult = _listRepository.AddList(list);
+            _listRepository.AddList(list);
 
-            return new CommandResponse(true, listResult);
+            var listResponse = new ListResponse()
+            {
+                Id = list.Id,
+                Title = list.Title
+            };
+
+            return new CommandResponse(true, listResponse);
         }
 
         public ICommandResult Handle(DeleteListRequest command)
         {
-            _listRepository.DeleteList(command.Id);
+            var list = _listRepository.GetListById(command.Id);
 
-            return new CommandResponse();
+            _listRepository.DeleteList(list);
+
+            return new CommandResponse(true, "Exclusão efetuada com sucesso.");
         }
     }
 }

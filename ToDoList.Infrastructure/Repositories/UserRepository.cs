@@ -19,12 +19,12 @@ namespace ToDoList.Infrastructure.Repositories
             return user;
         }
 
-        public int AddUser(User user)
+        public User AddUser(User user)
         {
             _context.Add(user);
             _context.SaveChanges();
 
-            return user.Id;
+            return user;
         }
         public void UpdateUser(User user)
         {

@@ -26,13 +26,8 @@ namespace ToDoList.Infrastructure.Repositories
             return list;
         }
 
-        public void DeleteList(int id)
+        public void DeleteList(List list)
         {
-            var list = _context.Lists.First(x => x.Id == id);
-
-            if (list == null) 
-                return;
-
             _context.Remove(list);
             _context.SaveChanges();
         }

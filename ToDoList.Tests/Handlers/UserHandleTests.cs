@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ToDoList.Domain.Adapters.Handlers;
+using ToDoList.Domain.Adapters.Repositories;
 using ToDoList.Domain.Commands.Request.User;
 using ToDoList.Domain.Commands.Response;
 using ToDoList.Domain.Commands.Response.User;
@@ -16,19 +17,25 @@ namespace ToDoList.Tests.Handlers
 {
     public class UserHandleTests
     {
-        [Fact]
-        public void test_create_user()
+        private readonly UserRepository _userRepository;
+
+        public UserHandleTests()
         {
             var context = new Configuration().ConfigureContext();
-            var userRepository = new UserRepository(context);
-            var handler = new UserHandler(userRepository);
+            _userRepository = new UserRepository(context);
+        }
+
+        [Fact]
+        public void Test_handler_user_create()
+        {
+            var handler = new UserHandler(_userRepository);
 
             var command = new CreateUserRequest()
             {
                 Email = "giuliacarlini@gmail.com",
-                Login = "gcarlini",
+                Login = "giuliacarlini",
                 Name = "Giulia Carlini",
-                Password = "123"
+                Password = "123456879"
             };
 
             var result = (CommandResponse)handler.Handle(command);
@@ -38,13 +45,11 @@ namespace ToDoList.Tests.Handlers
         }
 
         [Fact]
-        public void test_get_by_id_user()
+        public void Test_handler_user_get_by_id()
         {
-            test_create_user();
+            Test_handler_user_create();
 
-            var context = new Configuration().ConfigureContext();
-            var userRepository = new UserRepository(context);
-            var handler = new UserHandler(userRepository);
+            var handler = new UserHandler(_userRepository);
 
             var command = new GetUserByIdRequest()
             {
@@ -57,13 +62,11 @@ namespace ToDoList.Tests.Handlers
         }
 
         [Fact]
-        public void test_update_user()
+        public void Test_handler_user_update()
         {
-            test_create_user();
+            Test_handler_user_create();
 
-            var context = new Configuration().ConfigureContext();
-            var userRepository = new UserRepository(context);
-            var handler = new UserHandler(userRepository);
+            var handler = new UserHandler(_userRepository);
 
             var command = new UpdateUserRequest()
             {

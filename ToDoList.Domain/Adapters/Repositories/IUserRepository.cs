@@ -5,7 +5,7 @@ namespace ToDoList.Domain.Adapters.Repositories
     public interface IUserRepository
     {
         User? GetUserById(int id);
-        int AddUser(User user);
+        User AddUser(User user);
         void UpdateUser(User user);
         User? GetUserByEmail(string? email);
         User? GetUserByLogin(string login);

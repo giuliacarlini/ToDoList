@@ -1,14 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 using ToDoList.Domain.Commands.Request.ListItem;
 
 namespace ToDoList.Domain.Entities
 {
-    public class ListItem
+    public class ListItem: Entity
     {
         public ListItem(string title, string description, int idUser, int idList)
         {
-            Title = title;
-            Description = description;
+            Title = title.Trim();
+            Description = description.Trim();
             IdUser = idUser;
             IdList = idList;
         }
@@ -34,8 +35,21 @@ namespace ToDoList.Domain.Entities
 
         public void Refresh(string title, string description)
         {
-            Title = title;
-            Description = description;
+            Title = title ?? Title;
+            Description = description ?? Description;
+        }
+
+        public void Validate()
+        {
+            Clear();
+
+            Requires()
+                .IsGreaterOrEqualsThan(Title, 10, "Title")
+                .IsLowerOrEqualsThan(Title, 80, "Title")
+                .IsGreaterOrEqualsThan(Description, 10, "Title")
+                .IsLowerOrEqualsThan(Description, 80, "Title")
+                .IsGreaterThan(IdUser, 0, "IdUser")
+                .IsGreaterThan(IdList, 0, "IdList");
         }
     }
 }
