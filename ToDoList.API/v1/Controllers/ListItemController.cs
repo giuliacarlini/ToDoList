@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Commands.Request.ListItem;
+using ToDoList.Domain.Commands.Response;
 using ToDoList.Domain.Handlers;
 
 namespace ToDoList.API.v1.Controllers
@@ -16,16 +17,8 @@ namespace ToDoList.API.v1.Controllers
         public ActionResult GetListItemById([FromServices] ListItemHandler handler, 
             [FromBody] GetListItemByIdRequest command)
         {
-            try
-            {
-                var result = handler.Handle(command);
-
-                return Ok(result);
-            }
-            catch
-            {
-                return BadRequest(new { message = "" });
-            }
+            var result = (CommandResponse)handler.Handle(command);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         [HttpPost]
@@ -34,16 +27,8 @@ namespace ToDoList.API.v1.Controllers
         public ActionResult Post([FromServices] ListItemHandler handler,
             [FromBody] CreateListItemRequest command)
         {
-            try
-            {
-                var result = handler.Handle(command);
-
-                return Ok(result);
-            }
-            catch
-            {
-                return BadRequest(new { message = "Erro ao gravar item!" });
-            }
+            var result = (CommandResponse)handler.Handle(command);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         [HttpPut]
@@ -52,16 +37,8 @@ namespace ToDoList.API.v1.Controllers
         public ActionResult Update([FromServices] ListItemHandler handler,
             [FromBody] UpdateListItemRequest command)
         {
-            try
-            {
-                var result = handler.Handle(command);
-
-                return Ok(result);
-            }
-            catch
-            {
-                return BadRequest(new { message = "Erro ao atualizar item!" });
-            }
+            var result = (CommandResponse)handler.Handle(command);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         [HttpDelete]
@@ -70,16 +47,8 @@ namespace ToDoList.API.v1.Controllers
         public ActionResult Delete([FromServices] ListItemHandler handler,
             [FromBody] DeleteListItemRequest command)
         {
-            try
-            {
-                var result = handler.Handle(command);
-
-                return Ok(result);
-            }
-            catch
-            {
-                return BadRequest(new { message = "Erro ao excluir!" });
-            }
+            var result = (CommandResponse)handler.Handle(command);
+            return result.Success ? Ok(result) : NotFound(result);
         }
     }
 }

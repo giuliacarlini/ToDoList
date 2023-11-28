@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using ToDoList.Domain.Commands.Request.Authentication;
 using ToDoList.Domain.Commands.Response;
 using ToDoList.Domain.Handlers;
@@ -11,12 +12,6 @@ namespace ToDoList.API.v1.Controllers
     [ApiVersion("1.0")]
     public class AuthenticateController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-
-        public AuthenticateController(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
 
         [HttpPost]
         [AllowAnonymous]

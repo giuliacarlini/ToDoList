@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Domain.Adapters.Repositories;
 using ToDoList.Domain.Commands.Request.User;
+using ToDoList.Domain.Commands.Response;
 using ToDoList.Domain.Handlers;
 
 namespace ToDoList.API.v1.Controllers
@@ -24,15 +25,8 @@ namespace ToDoList.API.v1.Controllers
         [Authorize]
         public ActionResult Get([FromBody] GetUserByIdRequest command)
         {
-            try
-            {
-                var result = _handler.Handle(command);
-                return Ok(result);
-            }
-            catch
-            {
-                return NotFound(new { error = "Erro ao encontrar o usuário." });
-            }
+            var result = (CommandResponse)_handler.Handle(command);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         [HttpPost]
@@ -40,16 +34,8 @@ namespace ToDoList.API.v1.Controllers
         [Authorize]
         public ActionResult Post([FromBody] CreateUserRequest command)
         {
-            try
-            {
-                var result = _handler.Handle(command);
-                return Ok(result);
-            }
-            catch
-            {
-                return BadRequest(new { error = "Erro ao cadastrar o usuário." });
-            }
-
+            var result = (CommandResponse)_handler.Handle(command);
+            return result.Success ? Ok(result) : NotFound(result);
         }
 
         [HttpPut]
@@ -57,16 +43,8 @@ namespace ToDoList.API.v1.Controllers
         [Authorize]
         public ActionResult Put([FromBody] UpdateUserRequest command)
         {
-            try
-            {
-                var result = _handler.Handle(command);
-                return Ok(result);
-            }
-            catch
-            {
-                return BadRequest(new { error = "Erro ao alterar o usuário." });
-            }
+            var result = (CommandResponse)_handler.Handle(command);
+            return result.Success ? Ok(result) : NotFound(result);
         }
-
     }
 }

@@ -15,47 +15,23 @@ public class ListController : ControllerBase
     [MapToApiVersion("1.0")]
     public ActionResult GetById([FromServices] ListHandler handler, GetListRequest command)
     {
-        try
-        {
-            var result = (CommandResponse)handler.Handle(command);
-
-            return result.Success ? Ok(result) : NotFound(result);
-        }
-        catch
-        {
-            return NotFound(new { message = "Lista não encontrada" });
-        }
+        var result = (CommandResponse)handler.Handle(command);
+        return result.Success ? Ok(result) : NotFound(result);
     }
 
     [HttpPost]
     [MapToApiVersion("1.0")]
     public ActionResult Post([FromServices] ListHandler handler, [FromBody] CreateListRequest command)
     {
-        try
-        {
-            var result = (CommandResponse)handler.Handle(command);
-
-            return result.Success ? Ok(result) : NotFound(result);
-        }
-        catch
-        {
-            return BadRequest(new { message = "Lista não cadastrada." });
-        }
+        var result = (CommandResponse)handler.Handle(command);
+        return result.Success ? Ok(result) : NotFound(result);
     }
 
     [HttpDelete]
     [MapToApiVersion("1.0")]
     public ActionResult Delete([FromServices] ListHandler handler, [FromBody] DeleteListRequest command)
     {
-        try
-        {
-            var result = (CommandResponse)handler.Handle(command);
-
-            return result.Success ? Ok(result) : NotFound(result);
-        }
-        catch
-        {
-            return BadRequest(new { message = "Lista não cadastrada." });
-        }
+        var result = (CommandResponse)handler.Handle(command);
+        return result.Success ? Ok(result) : NotFound(result);
     }
 }
