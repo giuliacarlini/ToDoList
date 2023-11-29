@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json;
 
 namespace ToDoList.API
 {
@@ -18,16 +19,20 @@ namespace ToDoList.API
 
         public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
         { 
-
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IListRepository, ListRepository>();
             services.AddScoped<IListItemRepository, ListItemRepository>();
+
             services.AddTransient<ListHandler, ListHandler>();
             services.AddTransient<ListItemHandler, ListItemHandler>();
             services.AddTransient<UserHandler, UserHandler>();
             services.AddTransient<AuthenticateHandler, AuthenticateHandler>();
+
             services.Configure<AppSettings>(configuration);
             services.AddScoped<AppSettings, AppSettings>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<AuthenticatedUser>();
         }
 
         public static void AddSwaggerGen(this IServiceCollection services)
@@ -85,6 +90,9 @@ namespace ToDoList.API
 
         public static void AddAuthenticationConfig(this IServiceCollection services, AppSettings appSettings)
         {
+            string MyJwkLocation = Path.Combine(Environment.CurrentDirectory, "key.json");
+            var tokenJwt = JsonSerializer.Deserialize<JsonWebKey>(File.ReadAllText(MyJwkLocation));
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -97,7 +105,7 @@ namespace ToDoList.API
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.TokenConfigurations.SecretJwtKey)),
+                    IssuerSigningKey = tokenJwt,
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };

@@ -14,10 +14,9 @@ namespace ToDoList.API.v1.Controllers
         [HttpGet]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public ActionResult GetListItemById([FromServices] ListItemHandler handler, 
-            [FromBody] GetListItemByIdRequest command)
+        public ActionResult GetListItemById([FromServices] ListItemHandler handler, int id)
         {
-            var result = (CommandResponse)handler.Handle(command);
+            var result = (CommandResponse)handler.Handle(new GetListItemByIdRequest() { Id = id });
             return result.Success ? Ok(result) : NotFound(result);
         }
 

@@ -23,9 +23,9 @@ namespace ToDoList.API.v1.Controllers
         [HttpGet]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public ActionResult Get([FromBody] GetUserByIdRequest command)
+        public ActionResult Get(int Id)
         {
-            var result = (CommandResponse)_handler.Handle(command);
+            var result = (CommandResponse)_handler.Handle(new GetUserByIdRequest() { Id = Id });
             return result.Success ? Ok(result) : NotFound(result);
         }
 
