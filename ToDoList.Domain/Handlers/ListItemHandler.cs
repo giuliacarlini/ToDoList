@@ -61,7 +61,10 @@ namespace ToDoList.Domain.Handlers
 
             var listItem = new ListItem(command.Title, command.Description, command.IdUser, command.IdList);
 
-            _listItemRepository.AddListItem(listItem);
+            if (listItem.IsValid)
+                _listItemRepository.AddListItem(listItem);
+            else
+                return new CommandResponse(false, listItem.Notifications);
 
             var responseListItem = new ListItemResponse()
             {
@@ -82,7 +85,10 @@ namespace ToDoList.Domain.Handlers
 
             listItem.Refresh(command.Title,command.Description);
 
-            _listItemRepository.UpdateListItem(listItem);
+            if (listItem.IsValid)
+                _listItemRepository.UpdateListItem(listItem);
+            else
+                return new CommandResponse(false, listItem.Notifications);
 
             var responseListItem = new ListItemResponse()
             {

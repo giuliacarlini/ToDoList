@@ -15,23 +15,26 @@ namespace ToDoList.API.v1.Controllers
     {
         private readonly UserHandler _handler;
 
-        public UserController(UserHandler handler)
+        private readonly AuthenticatedUser _authenticateUser;
+
+        public UserController(UserHandler handler, AuthenticatedUser authenticatedUser)
         {
             _handler = handler;
+            _authenticateUser = authenticatedUser;
         }
 
         [HttpGet]
         [MapToApiVersion("1.0")]
         [Authorize]
-        public ActionResult Get(int Id)
+        public ActionResult Get(int id)
         {
-            var result = (CommandResponse)_handler.Handle(new GetUserByIdRequest() { Id = Id });
+            var result = (CommandResponse)_handler.Handle(new GetUserByIdRequest(id, _authenticateUser.Email));
             return result.Success ? Ok(result) : NotFound(result);
         }
 
         [HttpPost]
         [MapToApiVersion("1.0")]
-        [Authorize]
+        [AllowAnonymous]
         public ActionResult Post([FromBody] CreateUserRequest command)
         {
             var result = (CommandResponse)_handler.Handle(command);
@@ -43,6 +46,8 @@ namespace ToDoList.API.v1.Controllers
         [Authorize]
         public ActionResult Put([FromBody] UpdateUserRequest command)
         {
+            command.RefreshEmailUser(_authenticateUser.Email);
+
             var result = (CommandResponse)_handler.Handle(command);
             return result.Success ? Ok(result) : NotFound(result);
         }

@@ -41,7 +41,8 @@ namespace ToDoList.Domain.Handlers
         {
             var user = _userRepository.GetUserById(command.Id);
 
-            if (user == null) return new CommandResponse(false, "");
+            if (user.Email != command.EmailUserRequest)
+                return new CommandResponse(false, "O usuário solicitante é diferente do usuário solicitado para a alteração.");
             
             user.Refresh(command.Name, command.Email, command.Login, command.Password);
 
@@ -56,9 +57,12 @@ namespace ToDoList.Domain.Handlers
 
         public ICommandResult Handle(GetUserByIdRequest command)
         {
-            var user = _userRepository.GetUserById(command.Id);
+            var validateUser = _userRepository.GetUserByEmail(command.EmailUserRequest);
 
-            if (user == null) return new CommandResponse(false, "");
+            if (validateUser == null)
+                new CommandResponse(false, "Usuario solicitante inválido.");
+
+            var user = _userRepository.GetUserById(command.Id);
 
             var userResponse = new UserResponse(user.Id, user.Name, user.Email, user.Login);
 

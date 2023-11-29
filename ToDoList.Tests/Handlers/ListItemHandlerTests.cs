@@ -126,10 +126,7 @@ namespace ToDoList.Tests.Handlers
             var listItem = new ListItem("Tarefa descrição 1", "Titulo descrição 1", list.Id, user2.Id);
             _listItemRepository.AddListItem(listItem);
 
-            var command = new GetListItemByIdRequest()
-            {
-                Id = listItem.Id
-            };
+            var command = new GetListItemByIdRequest(listItem.Id);
 
             var handler = new ListItemHandler(_listItemRepository, _listRepository, _userRepository);
             var response = (CommandResponse)handler.Handle(command);

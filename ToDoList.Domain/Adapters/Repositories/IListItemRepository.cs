@@ -7,7 +7,7 @@ namespace ToDoList.Domain.Adapters.Repositories
         IEnumerable<ListItem> GetListById(int id);
         IEnumerable<ListItem> GetListItemsById(int id);
         int AddListItem(ListItem listItem);
-        ListItem GetListItemById(int id);
+        ListItem? GetListItemById(int id);
         void UpdateListItem(ListItem listItem);
         void DeleteListItem(int id);
     }

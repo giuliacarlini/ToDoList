@@ -13,9 +13,9 @@ namespace ToDoList.Infrastructure.Repositories
             _context = context;
         }
 
-        public List GetListById(int id)
+        public List? GetListById(int id)
         {
-            return _context.Lists.FirstOrDefault(x => x.Id == id);
+            return _context.List.Where(x => x.Id == id).FirstOrDefault();
         }
 
         public List AddList(List list)

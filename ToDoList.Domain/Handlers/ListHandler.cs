@@ -21,13 +21,18 @@ namespace ToDoList.Domain.Handlers
 
         public ICommandResult Handle(GetListRequest command)
         {
+            var user = _userRepository.GetUserByEmail(command.Email);
+
+            if (user == null) return new CommandResponse(false, "Login não cadastrado.");
+
             var list = _listRepository.GetListById(command.Id);
 
             if (list == null)
-                return new CommandResponse(false);
+                return new CommandResponse(false, "Lista não encontrada.");
 
             var listResponse = new ListResponse()
             {
+                Id = command.Id,
                 Title = list.Title
             };
             
@@ -36,13 +41,16 @@ namespace ToDoList.Domain.Handlers
 
         public ICommandResult Handle(CreateListRequest command)
         {
-            var user = _userRepository.GetUserByLogin(command.LoginUser);
+            var user = _userRepository.GetUserByEmail(command.Email);
 
             if (user == null) return new CommandResponse(false, "Login não cadastrado.");
 
             var list = new List(command.Title, user.Id);
 
-            _listRepository.AddList(list);
+            if (list.IsValid)
+                _listRepository.AddList(list);
+            else
+                return new CommandResponse(false, list.Notifications);
 
             var listResponse = new ListResponse()
             {
@@ -55,6 +63,10 @@ namespace ToDoList.Domain.Handlers
 
         public ICommandResult Handle(DeleteListRequest command)
         {
+            var user = _userRepository.GetUserByEmail(command.Email);
+
+            if (user == null) return new CommandResponse(false, "Login não cadastrado.");
+
             var list = _listRepository.GetListById(command.Id);
 
             _listRepository.DeleteList(list);

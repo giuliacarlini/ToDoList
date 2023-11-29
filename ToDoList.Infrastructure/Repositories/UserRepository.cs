@@ -14,7 +14,7 @@ namespace ToDoList.Infrastructure.Repositories
         }
         public User? GetUserById(int id)
         {
-            var user = _context.Users.First(x => x.Id == id);
+            var user = _context.Users.Where(x => x.Id == id).FirstOrDefault();
 
             return user;
         }
@@ -34,17 +34,13 @@ namespace ToDoList.Infrastructure.Repositories
 
         public User? GetUserByEmail(string? email)
         {
-            return _context.Users.FirstOrDefault(x => string.Equals(x.Email, email, StringComparison.CurrentCultureIgnoreCase));
+            return _context.Users.Where(x => x.Email == email).FirstOrDefault();
         }
 
-        public User? GetUserByLogin(string login)
-        {
-            return _context.Users.FirstOrDefault(x => string.Equals(x.Login, login, StringComparison.CurrentCultureIgnoreCase));
-        }
+        public User? GetUserByLogin(string login) => _context.Users.Where(x => x.Login == login).FirstOrDefault();
 
-        public int Count()
-        {
-            return _context.Users.Count();
-        }
+        public int Count() => _context.Users.Count();
+
+        public User? GetUserByEmailPassword(string email, string password) => _context.Users.Where(x => x.Email == email && x.Password == password).FirstOrDefault();
     }
 }

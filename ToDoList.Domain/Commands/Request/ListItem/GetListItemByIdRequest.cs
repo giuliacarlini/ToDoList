@@ -10,6 +10,11 @@ namespace ToDoList.Domain.Commands.Request.ListItem
 {
     public class GetListItemByIdRequest: ICommand
     {
+        public GetListItemByIdRequest(int id)
+        {
+            Id = id;
+        }
+
         public int Id { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace ToDoList.Domain.Adapters.Repositories
         void UpdateUser(User user);
         User? GetUserByEmail(string? email);
         User? GetUserByLogin(string login);
+        User? GetUserByEmailPassword(string email, string password);
         public int Count();
     }
 }

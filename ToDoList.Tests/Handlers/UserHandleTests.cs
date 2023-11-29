@@ -51,10 +51,7 @@ namespace ToDoList.Tests.Handlers
 
             var handler = new UserHandler(_userRepository);
 
-            var command = new GetUserByIdRequest()
-            {
-                Id = 1
-            };
+            var command = new GetUserByIdRequest(1, "adm@adm.com");
 
             var result = (CommandResponse)handler.Handle(command);
             Assert.True(result.Success);

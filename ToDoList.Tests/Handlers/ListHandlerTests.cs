@@ -54,9 +54,10 @@ namespace ToDoList.Tests.Handlers
 
             var commandCreateListRequest = new CreateListRequest()
             {
-                Title = "Teste de título",
-                LoginUser = user.Login
+                Title = "Teste de título",               
             };
+
+            commandCreateListRequest.RefreshEmail(user.Email);
 
             var handlerList = new ListHandler(_listRepository, _userRepository);
             var handlerListResult = (CommandResponse)handlerList.Handle(commandCreateListRequest);
@@ -74,9 +75,11 @@ namespace ToDoList.Tests.Handlers
 
             var commandCreateListRequest = new CreateListRequest()
             {
-                Title = "Teste de título",
-                LoginUser = "admWrong"
+                Title = "Teste de título"
             };
+
+            commandCreateListRequest.RefreshEmail("emailerrado");
+
 
             var handlerList = new ListHandler(_listRepository, _userRepository);
             var handlerListResult = (CommandResponse)handlerList.Handle(commandCreateListRequest);
@@ -96,9 +99,10 @@ namespace ToDoList.Tests.Handlers
 
             var commandCreateListRequest = new CreateListRequest()
             {
-                Title = "Teste de título",
-                LoginUser = user.Login
+                Title = "Teste de título",       
             };
+
+            commandCreateListRequest.RefreshEmail(user.Email);
 
             var handlerList = new ListHandler(_listRepository, _userRepository);
             var handlerListCreateResult = (CommandResponse)handlerList.Handle(commandCreateListRequest);
@@ -109,6 +113,8 @@ namespace ToDoList.Tests.Handlers
             {
                 Id = list.Id,
             };
+
+            commandDeleteListRequest.RefreshEmail(user.Email);
 
             var handlerListDeleteResult = (CommandResponse)handlerList.Handle(commandDeleteListRequest);
 

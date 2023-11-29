@@ -15,12 +15,12 @@ public class ListItemRepository : IListItemRepository
 
     public IEnumerable<ListItem> GetListById(int id)
     {
-        return _context.ListItems.Where(x => x.IdList == id && x.IdListItem <= 0);
+        return _context.ListItem.Where(x => x.IdList == id && x.IdListItem <= 0);
     }
 
     public IEnumerable<ListItem> GetListItemsById(int id)
     {
-        return _context.ListItems.Where(x => x.IdListItem == id);
+        return _context.ListItem.Where(x => x.IdListItem == id);
     }
 
     public int AddListItem(ListItem listItem)
@@ -31,9 +31,9 @@ public class ListItemRepository : IListItemRepository
         return listItem.Id;
     }
 
-    public ListItem GetListItemById(int id)
+    public ListItem? GetListItemById(int id)
     {
-        return _context.ListItems.First(x => x.Id == id);
+        return _context.ListItem.Where(x => x.Id == id).FirstOrDefault();
     }
 
     public void UpdateListItem(ListItem listItem)
@@ -44,7 +44,7 @@ public class ListItemRepository : IListItemRepository
 
     public void DeleteListItem(int id)
     {
-        var listItem = _context.ListItems.First(x => x.Id == id);
+        var listItem = _context.ListItem.Where(x => x.Id == id).FirstOrDefault();
 
         _context.Remove(listItem);
         _context.SaveChanges();

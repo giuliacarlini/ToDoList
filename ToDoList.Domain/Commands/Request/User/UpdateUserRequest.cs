@@ -14,5 +14,10 @@ namespace ToDoList.Domain.Commands.Request.User
         public string Email { get; set; } = string.Empty;
         public string Login { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public string EmailUserRequest { get; private set; } = string.Empty;
+        public void RefreshEmailUser(string emailUser)
+        {
+            EmailUserRequest = emailUser;
+        }
     }
 }

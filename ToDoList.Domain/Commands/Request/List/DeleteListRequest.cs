@@ -10,5 +10,11 @@ namespace ToDoList.Domain.Commands.Request.List
     public class DeleteListRequest: ICommand
     {
         public int Id { get; set; }
+        public string Email { get; private set; } = string.Empty;
+
+        public void RefreshEmail(string email)
+        {
+            Email = email;
+        }
     }
 }

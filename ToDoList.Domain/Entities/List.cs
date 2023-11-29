@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ToDoList.Domain.Entities
 {
     public class List: Entity
     {
+
         public List(string title, int userId)
         {
             this.Title = title.Trim();

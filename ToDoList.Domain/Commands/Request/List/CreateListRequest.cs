@@ -10,5 +10,10 @@ namespace ToDoList.Domain.Commands.Request.List;
 public class CreateListRequest : ICommand
 {
     public string Title { get; set; } = string.Empty;
-    public string LoginUser { get; set; } = string.Empty;
+    public string Email { get; private set; } = string.Empty;
+
+    public void RefreshEmail(string email)
+    {
+        Email = email;
+    }
 }
