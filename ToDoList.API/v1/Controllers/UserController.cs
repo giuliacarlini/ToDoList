@@ -49,7 +49,7 @@ namespace ToDoList.API.v1.Controllers
             command.RefreshEmailUser(_authenticateUser.Email);
 
             var result = (CommandResponse)_handler.Handle(command);
-            return result.Success ? Ok(result) : NotFound(result);
+            return result.Success ? Ok(result.Success) : NotFound(result);
         }
     }
 }

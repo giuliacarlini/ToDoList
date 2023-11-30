@@ -25,6 +25,9 @@ namespace ToDoList.Domain.Handlers
 
         public ICommandResult Handle(CreateUserRequest command)
         {
+            if (_userRepository.GetUserByEmail(command.Email) != null)
+                return new CommandResponse(false, "E-mail já cadastrado.");
+
             var user = new User(command.Name, command.Email, command.Login, command.Password);
 
             if (user.IsValid)
@@ -41,32 +44,34 @@ namespace ToDoList.Domain.Handlers
         {
             var user = _userRepository.GetUserById(command.Id);
 
-            if (user.Email != command.EmailUserRequest)
-                return new CommandResponse(false, "O usuário solicitante é diferente do usuário solicitado para a alteração.");
+            if (user == null)
+                return new CommandResponse(false, "Usuário não encontrado.");
+
+            //if (user.Email != command.EmailUserRequest)
+            //    return new CommandResponse(false, "O usuário solicitante é diferente do usuário solicitado para a alteração.");
             
             user.Refresh(command.Name, command.Email, command.Login, command.Password);
 
-            if (user.IsValid)
-                _userRepository.UpdateUser(user);
-            else
+            if (user.IsValid == false)
                 return new CommandResponse(false, user.Notifications);
 
+            _userRepository.UpdateUser(user);
 
             return new CommandResponse(true);
         }
 
         public ICommandResult Handle(GetUserByIdRequest command)
         {
-            var validateUser = _userRepository.GetUserByEmail(command.EmailUserRequest);
-
-            if (validateUser == null)
-                new CommandResponse(false, "Usuario solicitante inválido.");
-
+            if (command.Id <= 0)
+                return new CommandResponse(false, "Requisição inválida.");
+           
             var user = _userRepository.GetUserById(command.Id);
 
-            var userResponse = new UserResponse(user.Id, user.Name, user.Email, user.Login);
+            if (user == null)
+                return new CommandResponse();
 
-            return new CommandResponse(true, userResponse);
+            var userResponse = new UserResponse(user.Id, user.Name, user.Email, user.Login);
+                return new CommandResponse(true, userResponse);                
         }
     }
 }
